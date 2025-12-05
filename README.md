@@ -27,3 +27,12 @@ Feita na ferramenta brModelo.
 
 ![Modelagem Conceitual ER](/assets/Modelo%20Conceitual%20ER.png)
 
+## Modelagem Lógica
+
+Mapeamento Conceitual-Lógico do sistemas.
+
+Utilizada a abordagem de projeto lógico de alto e baixo nível.
+
+### Modelagem de Alto Nível
+
+![Modelagem de Alto Nível](/assets/Modelagem%20Alto%20Nível.png)
