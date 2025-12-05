@@ -18,3 +18,12 @@ O sistema tem como finalidade fornecer um canal seguro, anônimo e acessível pa
     • Possibilitar atualização do status de cada ocorrência pela equipe responsável (pendente, analisando, resolvido).
 
     • Permitir visualização de estatísticas gerais, como volume de relatos por região ou tipo de ocorrência.
+
+## Modelagem Conceitual
+
+Modelagem Conceitual do projeto com a notação ER.
+
+Feita na ferramenta brModelo.
+
+![Modelagem Conceitual ER](/assets/Modelo%20Conceitual%20ER.png)
+
