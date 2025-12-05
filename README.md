@@ -50,3 +50,17 @@ Utilizada a abordagem de projeto lógico de alto e baixo nível.
 - Modelagem de Categoria
 
 ![Documento de Categoria](/assets/Mod%20BN3.png)
+
+## Tecnologias Utilizadas
+
+- Back End:
+    
+    - Java (Spring Boot)
+
+- Front End:
+
+    - React.JS
+
+- Bando de Dados
+
+    - MongoDB
