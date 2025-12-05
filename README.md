@@ -36,3 +36,17 @@ Utilizada a abordagem de projeto lógico de alto e baixo nível.
 ### Modelagem de Alto Nível
 
 ![Modelagem de Alto Nível](/assets/Modelagem%20Alto%20Nível.png)
+
+### Modelagem de Baixo Nível
+
+- Modelagem de Ocorrência
+
+![Documento de Ocorrência](/assets/Mod%20BN1.png)
+
+- Modelagem de Setor
+
+![Documento de Setor](/assets/Mod%20BN2.png)
+
+- Modelagem de Categoria
+
+![Documento de Categoria](/assets/Mod%20BN3.png)
