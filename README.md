@@ -67,3 +67,10 @@ Utilizada a abordagem de projeto lógico de alto e baixo nível.
 
    
   [![MongoDB](https://img.shields.io/badge/MongoDB-%234ea94b.svg?logo=mongodb&logoColor=white)](#)
+
+
+## Autores
+
+- [Samuell Aguiar](www.github.com/SamuellAguiar)
+- [Gabriel Roberto](www.github.com/BielCandido)
+- [Albert Ofori](www.github.com/)
