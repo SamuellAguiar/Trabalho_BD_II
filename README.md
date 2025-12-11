@@ -73,4 +73,4 @@ Utilizada a abordagem de projeto lógico de alto e baixo nível.
 
 - [Samuell Aguiar] (www.github.com/SamuellAguiar)
 - [Gabriel Roberto] (www.github.com/BielCandido)
-- [Albert Ofori] (www.github.com/)
+- [Albert Ofori] (www.github.com/AlbertJohnson994)
