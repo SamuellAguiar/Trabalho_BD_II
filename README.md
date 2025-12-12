@@ -57,7 +57,7 @@ Utilizada a abordagem de projeto lógico de alto e baixo nível.
 
 - Back End:
     
-  [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-6DB33F?logo=springboot&logoColor=fff)](#)
+  - Em processo de decisão
 
 - Front End:
 
