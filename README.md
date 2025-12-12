@@ -4,7 +4,7 @@
    <img src="http://img.shields.io/static/v1?label=STATUS&message=EM%20DESENVOLVIMENTO&color=RED&style=for-the-badge" #vitrinedev/>
 </p>
 
-## Sobre o Projeto:
+## Sobre o Projeto
 O sistema tem como finalidade fornecer um canal seguro, anônimo e acessível para que membros da comunidade universitária registrem relatos relacionados à segurança no campus, como furtos, situações de risco, iluminação deficiente, assédio ou problemas estruturais. O objetivo é permitir à instituição monitorar padrões, identificar áreas críticas e melhorar a atuação preventiva. 
 
 ## Requisitos
