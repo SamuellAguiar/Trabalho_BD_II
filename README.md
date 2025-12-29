@@ -57,7 +57,7 @@ Utilizada a abordagem de projeto lógico de alto e baixo nível.
 
 - Back End:
     
-  - Em processo de decisão
+  [![Node.js](https://img.shields.io/badge/Node.js-6DA55F?logo=node.js&logoColor=white)](#)
 
 - Front End:
 
