@@ -1,0 +1,29 @@
+# Dependências do Node.js
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Arquivos de Variáveis de Ambiente (CRÍTICO: Contém senhas)
+.env
+
+# Uploads de imagens (Não queremos versionar as fotos de teste)
+uploads/*
+!uploads/.gitkeep
+
+# Arquivos do Sistema Operacional
+.DS_Store
+Thumbs.db
+
+# Logs gerais
+logs/
+*.log
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Arquivos de IDE
+.vscode/
+.idea/
+*.swp
+*.swo
