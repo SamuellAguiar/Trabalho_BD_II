@@ -91,22 +91,44 @@
      font-size: 1.2rem;
 }
 
-/* Responsividade */
-@media (max-width: 1024px) {
-     .kpi-grid {
-          grid-template-columns: 1fr 1fr;
+@media (max-width: 768px) {
+     .dashboard-container {
+          padding: 1rem;
      }
 
+     .dashboard-header-content {
+          text-align: center;
+     }
+
+     /* Grid de números (KPIs) em 2 colunas */
+     .kpi-grid {
+          grid-template-columns: 1fr 1fr;
+          gap: 1rem;
+     }
+
+     .kpi-card {
+          flex-direction: column;
+          text-align: center;
+          padding: 1rem;
+          gap: 0.5rem;
+     }
+
+     .kpi-info strong {
+          font-size: 1.5rem;
+     }
+
+     /* Gráficos um embaixo do outro */
      .charts-row {
           grid-template-columns: 1fr;
      }
-}
 
-@media (max-width: 768px) {
-     .kpi-grid {
-          grid-template-columns: 1fr;
+     .chart-card {
+          padding: 1rem;
+          overflow-x: hidden;
+          /* Evita rolagem horizontal indesejada */
      }
 
+     /* Botões de Relatório Empilhados */
      .reports-grid {
           grid-template-columns: 1fr;
      }
