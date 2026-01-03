@@ -1,0 +1,116 @@
+/* src/components/layout/AdminLayout.css */
+
+.admin-container {
+     display: flex;
+     min-height: 100vh;
+     background-color: #f1f5f9;
+     /* Cinza um pouco mais escuro para diferenciar */
+     font-family: 'Inter', sans-serif;
+}
+
+/* --- SIDEBAR --- */
+.admin-sidebar {
+     width: 260px;
+     background-color: #1a202c;
+     /* Fundo escuro profissional */
+     color: white;
+     display: flex;
+     flex-direction: column;
+     position: fixed;
+     height: 100vh;
+}
+
+.sidebar-header {
+     height: 80px;
+     display: flex;
+     align-items: center;
+     padding-left: 1.5rem;
+     border-bottom: 1px solid #2d3748;
+}
+
+.sidebar-header h3 {
+     font-size: 1.2rem;
+     color: #6c63ff;
+     /* Roxo da marca */
+}
+
+.sidebar-nav {
+     padding: 2rem 1rem;
+     flex: 1;
+     display: flex;
+     flex-direction: column;
+     gap: 0.5rem;
+}
+
+.sidebar-link {
+     display: flex;
+     align-items: center;
+     gap: 1rem;
+     padding: 12px 16px;
+     color: #a0aec0;
+     text-decoration: none;
+     border-radius: 8px;
+     transition: all 0.2s;
+}
+
+.sidebar-link:hover {
+     background-color: #2d3748;
+     color: white;
+}
+
+.sidebar-link.active {
+     background-color: #6c63ff;
+     color: white;
+     font-weight: 500;
+}
+
+.sidebar-footer {
+     padding: 1rem;
+     border-top: 1px solid #2d3748;
+}
+
+.sidebar-link.logout {
+     color: #e53e3e;
+}
+
+.sidebar-link.logout:hover {
+     background-color: #feb2b2;
+     color: #742a2a;
+}
+
+/* --- CONTEÚDO --- */
+.admin-content {
+     margin-left: 260px;
+     /* Compensa a largura da sidebar fixa */
+     flex: 1;
+     display: flex;
+     flex-direction: column;
+}
+
+.admin-topbar {
+     height: 80px;
+     background-color: white;
+     border-bottom: 1px solid #e2e8f0;
+     display: flex;
+     align-items: center;
+     justify-content: space-between;
+     padding: 0 2rem;
+}
+
+.admin-topbar h2 {
+     font-size: 1.25rem;
+     color: #2d3748;
+}
+
+.badge-user {
+     background-color: #ebf8ff;
+     color: #3182ce;
+     padding: 4px 12px;
+     border-radius: 20px;
+     font-size: 0.85rem;
+     font-weight: 600;
+}
+
+.admin-page-wrapper {
+     padding: 2rem;
+}
