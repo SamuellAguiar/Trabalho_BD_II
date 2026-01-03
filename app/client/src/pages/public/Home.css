@@ -1,0 +1,151 @@
+/* src/pages/public/Home.css */
+
+/* --- Configurações Gerais da Página --- */
+.home-wrapper {
+     display: flex;
+     flex-direction: column;
+     /* AUMENTEI O ESPAÇAMENTO GERAL AQUI DE 4rem PARA 6rem */
+     gap: 6rem;
+     padding-bottom: 5rem;
+     width: 100%;
+}
+
+.centered-content {
+     max-width: 1200px;
+     margin: 0 auto;
+     width: 100%;
+     padding: 0 1.5rem;
+     /* Garante que não encoste na borda em telas menores */
+}
+
+/* Utilitários de Grid */
+.grid-4 {
+     display: grid;
+     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+     gap: 2rem;
+}
+
+.grid-3 {
+     display: grid;
+     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+     gap: 2rem;
+}
+
+/* --- SEÇÃO HERO --- */
+.hero-section {
+     text-align: center;
+     padding-top: 4rem;
+     /* Mais espaço no topo */
+     padding-bottom: 2rem;
+}
+
+.hero-title {
+     font-size: 3rem;
+     /* Aumentei um pouco */
+     color: #1a202c;
+     margin-bottom: 1.5rem;
+     font-weight: 800;
+     line-height: 1.2;
+}
+
+.hero-subtitle {
+     font-size: 1.15rem;
+     color: #4a5568;
+     max-width: 700px;
+     margin: 0 auto 3rem auto;
+     line-height: 1.6;
+}
+
+.hero-buttons {
+     display: flex;
+     gap: 1.5rem;
+     justify-content: center;
+}
+
+/* --- SEÇÃO FEATURES (Cards Brancos) --- */
+.features-grid {
+     /* Adicionei margem extra embaixo para separar do "Como Funciona" */
+     margin-bottom: 2rem;
+}
+
+/* --- SEÇÃO COMO FUNCIONA --- */
+/* Títulos das Seções */
+.section-title {
+     text-align: center;
+     font-size: 2rem;
+     color: #2d3748;
+     margin-bottom: 3rem;
+     font-weight: 700;
+}
+
+.big-white-card {
+     background: white;
+     padding: 4rem 3rem;
+     /* Mais espaçamento interno */
+     border-radius: 24px;
+     /* Bordas mais arredondadas */
+     box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+}
+
+.step-item {
+     text-align: center;
+     padding: 1rem;
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+}
+
+.step-number {
+     background-color: #f3f0ff;
+     /* Roxo bem suave */
+     color: #6c63ff;
+     width: 60px;
+     /* Um pouco maior */
+     height: 60px;
+     border-radius: 50%;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     font-size: 1.5rem;
+     font-weight: 800;
+     margin-bottom: 1.5rem;
+     box-shadow: 0 4px 6px rgba(108, 99, 255, 0.1);
+}
+
+.step-item h3 {
+     margin-bottom: 1rem;
+     color: #2d3748;
+     font-size: 1.25rem;
+}
+
+.step-item p {
+     color: #718096;
+     font-size: 1rem;
+     line-height: 1.6;
+}
+
+/* --- SEÇÃO ESTATÍSTICAS --- */
+.stats-grid {
+     margin-top: 1rem;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+     .hero-title {
+          font-size: 2.2rem;
+     }
+
+     .hero-buttons {
+          flex-direction: column;
+     }
+
+     .big-white-card {
+          padding: 2rem 1.5rem;
+     }
+
+     .home-wrapper {
+          gap: 4rem;
+     }
+
+     /* Diminui um pouco o gap no mobile */
+}

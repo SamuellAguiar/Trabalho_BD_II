@@ -1,0 +1,120 @@
+/* src/pages/public/NovaOcorrencia.css */
+
+.nova-ocorrencia-wrapper {
+     padding-top: 3rem;
+     padding-bottom: 3rem;
+     display: flex;
+     justify-content: center;
+}
+
+.form-card {
+     background: white;
+     width: 100%;
+     max-width: 800px;
+     /* Largura controlada */
+     padding: 3rem;
+     border-radius: 16px;
+     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.form-header {
+     margin-bottom: 2.5rem;
+     border-bottom: 1px solid #edf2f7;
+     padding-bottom: 1.5rem;
+}
+
+.form-header h2 {
+     font-size: 1.8rem;
+     color: #1a202c;
+     margin-bottom: 0.5rem;
+}
+
+.form-header p {
+     color: #718096;
+}
+
+/* Layout de Linha (Grid) */
+.form-row {
+     display: grid;
+     grid-template-columns: 1fr 1fr;
+     gap: 2rem;
+}
+
+/* Botão de Geolocalização */
+.btn-geo {
+     display: flex;
+     align-items: center;
+     gap: 0.5rem;
+     padding: 10px 20px;
+     border-radius: 8px;
+     font-weight: 600;
+     border: none;
+     cursor: pointer;
+     transition: all 0.2s;
+     width: fit-content;
+}
+
+.btn-geo.idle,
+.btn-geo.error {
+     background-color: #00b894;
+     /* Verde do print */
+     color: white;
+}
+
+.btn-geo.success {
+     background-color: #e6fffa;
+     color: #00b894;
+     border: 1px solid #00b894;
+}
+
+.geo-info {
+     display: block;
+     margin-top: 0.5rem;
+     font-size: 0.85rem;
+     color: #718096;
+}
+
+/* Botões de Ação (Footer do Form) */
+.form-actions {
+     display: flex;
+     gap: 1rem;
+     margin-top: 2rem;
+     padding-top: 2rem;
+     border-top: 1px solid #edf2f7;
+}
+
+/* Ajuste no nosso Button reutilizável para ficar largo */
+.form-actions .btn-purple {
+     flex: 2;
+     /* Ocupa mais espaço */
+     display: flex;
+     justify-content: center;
+     align-items: center;
+}
+
+.btn-cancel {
+     flex: 1;
+     background-color: #e2e8f0;
+     color: #4a5568;
+     border: none;
+     border-radius: 8px;
+     font-weight: 600;
+     cursor: pointer;
+     transition: background 0.2s;
+}
+
+.btn-cancel:hover {
+     background-color: #cbd5e0;
+}
+
+/* Responsividade */
+@media (max-width: 640px) {
+     .form-row {
+          grid-template-columns: 1fr;
+          gap: 0;
+     }
+
+     .form-card {
+          padding: 1.5rem;
+     }
+}
