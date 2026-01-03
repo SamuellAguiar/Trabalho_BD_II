@@ -118,3 +118,42 @@
           padding: 1.5rem;
      }
 }
+
+@media (max-width: 768px) {
+     .nova-ocorrencia-wrapper {
+          padding: 1rem;
+     }
+
+     .form-card {
+          padding: 1.5rem 1rem;
+          /* Menos padding lateral */
+     }
+
+     .form-header h2 {
+          font-size: 1.5rem;
+          text-align: center;
+     }
+
+     .form-row {
+          grid-template-columns: 1fr;
+          /* Empilha Categoria e Setor */
+          gap: 0;
+     }
+
+     .btn-geo {
+          width: 100%;
+          justify-content: center;
+          padding: 15px;
+          /* Botão mais alto para dedo */
+     }
+
+     .form-actions {
+          flex-direction: column-reverse;
+          gap: 1rem;
+     }
+
+     .form-actions button {
+          width: 100%;
+          padding: 15px;
+     }
+}
