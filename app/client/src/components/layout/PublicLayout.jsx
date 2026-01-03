@@ -45,7 +45,7 @@ const PublicLayout = () => {
                     <div className="centered-content footer-flex">
                          <p>© 2025 UFOP - Departamento de Computação</p>
 
-                         <Link to="/admin" className="admin-access-link">
+                         <Link to="/login-admin" className="admin-access-link">
                               <LayoutDashboard size={16} />
                               <span>Acesso Administrativo</span>
                          </Link>
