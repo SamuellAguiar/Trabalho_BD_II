@@ -1,41 +1,56 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 
+// Layouts
+import PublicLayout from '../components/layout/PublicLayout';
+import AdminLayout from '../components/layout/AdminLayout';
+
 // Páginas Públicas
 import Home from '../pages/public/Home';
-import NovaOcorrencia from '../pages/public/NovaOcorrencia'; // Certifique-se que este arquivo existe
-import Listagem from '../pages/public/Listagem';             // Certifique-se que este arquivo existe
+import NovaOcorrencia from '../pages/public/NovaOcorrencia';
+import Listagem from '../pages/public/Listagem';
 
-import PublicLayout from '../components/layout/PublicLayout';
+// Páginas Admin
+import LoginAdmin from '../pages/admin/LoginAdmin';
+import Dashboard from '../pages/admin/Dashboard';
+import GerenciarGenerico from '../pages/admin/GerenciarGenerico';
+import GerenciarOcorrencias from '../pages/admin/GerenciarOcorrencias';
 
-// Placeholder para Admin (Faremos depois)
-const AdminLayout = () => <div style={{ padding: 20 }}><h1>Área Admin (Em construção)</h1></div>;
-const LoginAdmin = () => <div style={{ padding: 20 }}><h1>Login (Em construção)</h1></div>;
+// --- COMPONENTE DE ROTA PROTEGIDA ---
+const PrivateRoute = ({ children }) => {
+     // Verifica se existe o token simulado
+     const isAuthenticated = localStorage.getItem('admin_token') === 'true';
+
+     // Se sim, mostra o conteúdo (AdminLayout). Se não, joga pro Login.
+     return isAuthenticated ? children : <Navigate to="/login-admin" replace />;
+};
 
 const AppRoutes = () => {
      return (
           <Routes>
-               {/* --- FLUXO PÚBLICO --- */}
-               {/* O PublicLayout contém o Header e Footer */}
+               {/* FLUXO PÚBLICO */}
                <Route path="/" element={<PublicLayout />}>
-
-                    {/* Rota Index: É a Home Page */}
                     <Route index element={<Home />} />
-
-                    {/* Rota: /nova -> Tela de Cadastro */}
                     <Route path="nova" element={<NovaOcorrencia />} />
-
-                    {/* Rota: /lista -> Tela de Visualização  */}
-                    <Route path="lista" element={<Listagem />} /> 
-
+                    <Route path="lista" element={<Listagem />} />
                </Route>
 
-               {/* --- FLUXO ADMIN (Futuro) --- */}
-               <Route path="/admin" element={<AdminLayout />} />
+               {/* ROTA DE LOGIN (Fora dos Layouts) */}
                <Route path="/login-admin" element={<LoginAdmin />} />
 
-               {/* Rota de Erro (404) - Redireciona para Home */}
+               {/* FLUXO ADMIN (PROTEGIDO) */}
+               <Route path="/admin" element={
+                    <PrivateRoute>
+                         <AdminLayout />
+                    </PrivateRoute>
+               }>
+                    <Route index element={<Dashboard />} />
+                    <Route path="ocorrencias" element={<GerenciarOcorrencias />} />
+                    <Route path="setores" element={<GerenciarGenerico titulo="Setores" endpoint="/setores" tipo="setores" />} />
+                    <Route path="categorias" element={<GerenciarGenerico titulo="Categorias" endpoint="/categorias" tipo="categorias" />} />
+               </Route>
+
                <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes >
+          </Routes>
      );
 };
 
