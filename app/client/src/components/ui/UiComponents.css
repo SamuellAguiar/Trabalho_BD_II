@@ -119,3 +119,93 @@
      opacity: 0.9;
      font-weight: 500;
 }
+
+/* ... (Mantenha os estilos anteriores de Button, FeatureCard etc) ... */
+
+/* --- KPI CARD (Admin) --- */
+.kpi-card {
+     background: white;
+     padding: 1.5rem;
+     border-radius: 12px;
+     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+     display: flex;
+     justify-content: space-between;
+     align-items: center;
+     transition: transform 0.2s;
+}
+
+.kpi-card:hover {
+     transform: translateY(-2px);
+}
+
+.kpi-info span {
+     display: block;
+     font-size: 0.9rem;
+     color: #718096;
+     margin-bottom: 0.5rem;
+}
+
+.kpi-info strong {
+     font-size: 2rem;
+     font-weight: 700;
+}
+
+.kpi-icon {
+     padding: 12px;
+     border-radius: 12px;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+}
+
+/* Cores de Fundo Suaves */
+.bg-purple-light {
+     background-color: #f3f0ff;
+}
+
+.bg-yellow-light {
+     background-color: #fffff0;
+     border: 1px solid #fefcbf;
+}
+
+.bg-blue-light {
+     background-color: #ebf8ff;
+}
+
+.bg-green-light {
+     background-color: #f0fff4;
+}
+
+/* --- REPORT BUTTON (Admin) --- */
+.report-btn {
+     background: white;
+     border: 1px solid #e2e8f0;
+     padding: 1.5rem;
+     border-radius: 12px;
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+     justify-content: center;
+     gap: 1rem;
+     cursor: pointer;
+     transition: all 0.2s;
+     width: 100%;
+     /* Ocupa a grid */
+}
+
+.report-btn:hover {
+     border-color: #6c63ff;
+     transform: translateY(-2px);
+     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.report-btn span {
+     font-weight: 600;
+     color: #4a5568;
+}
+
+.report-icon {
+     background-color: #f3f0ff;
+     padding: 10px;
+     border-radius: 50%;
+}
