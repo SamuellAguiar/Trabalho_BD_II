@@ -43,7 +43,7 @@ const PublicLayout = () => {
                {/* Rodapé Simples */}
                <footer className="public-footer">
                     <div className="centered-content footer-flex">
-                         <p>© 2025 UFOP - Departamento de Computação</p>
+                         <p>© 2025 UFOP - Sentinel</p>
 
                          <Link to="/login-admin" className="admin-access-link">
                               <LayoutDashboard size={16} />
