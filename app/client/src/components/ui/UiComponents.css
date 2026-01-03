@@ -1,0 +1,121 @@
+/* src/components/ui/UiComponents.css */
+
+/* --- BOTÕES --- */
+.btn-purple {
+     display: inline-block;
+     padding: 12px 24px;
+     border-radius: 8px;
+     font-weight: 600;
+     text-decoration: none;
+     transition: all 0.3s ease;
+     font-size: 1rem;
+     cursor: pointer;
+     border: 2px solid transparent;
+     text-align: center;
+}
+
+.btn-purple.solid {
+     background-color: #6c63ff;
+     color: white;
+     border-color: #6c63ff;
+     box-shadow: 0 4px 6px rgba(108, 99, 255, 0.2);
+}
+
+.btn-purple.solid:hover {
+     background-color: #5a52d5;
+     border-color: #5a52d5;
+     transform: translateY(-2px);
+}
+
+.btn-purple.outline {
+     background-color: transparent;
+     color: #6c63ff;
+     border-color: #6c63ff;
+}
+
+.btn-purple.outline:hover {
+     background-color: #f0f0ff;
+     transform: translateY(-2px);
+}
+
+/* --- FEATURE CARD (Branco) --- */
+.feature-card-white {
+     background: white;
+     padding: 2rem;
+     border-radius: 16px;
+     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+     transition: transform 0.3s ease;
+     display: flex;
+     flex-direction: column;
+     align-items: flex-start;
+     text-align: left;
+     height: 100%;
+}
+
+.feature-card-white:hover {
+     transform: translateY(-5px);
+     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.icon-wrapper {
+     background-color: #f0f0ff;
+     padding: 12px;
+     border-radius: 12px;
+     margin-bottom: 1.5rem;
+     display: inline-flex;
+     align-items: center;
+     justify-content: center;
+}
+
+.feature-card-white h3 {
+     font-size: 1.25rem;
+     color: #2d3748;
+     margin-bottom: 0.75rem;
+}
+
+.feature-card-white p {
+     color: #718096;
+     line-height: 1.5;
+}
+
+/* --- STAT CARD (Colorido) --- */
+.stat-card {
+     padding: 2rem;
+     border-radius: 16px;
+     color: white;
+     display: flex;
+     flex-direction: column;
+     justify-content: space-between;
+     min-height: 180px;
+     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.stat-card.blue {
+     background-color: #3182ce;
+}
+
+.stat-card.green {
+     background-color: #38a169;
+}
+
+.stat-card.purple {
+     background-color: #805ad5;
+}
+
+.stat-icon {
+     margin-bottom: 1.5rem;
+}
+
+.stat-number {
+     display: block;
+     font-size: 2.5rem;
+     font-weight: 800;
+     line-height: 1;
+     margin-bottom: 0.5rem;
+}
+
+.stat-label {
+     font-size: 1rem;
+     opacity: 0.9;
+     font-weight: 500;
+}
