@@ -1,0 +1,113 @@
+/* src/pages/admin/Dashboard.css */
+
+.dashboard-container {
+     display: flex;
+     flex-direction: column;
+     gap: 2rem;
+     width: 100%;
+     padding-bottom: 2rem;
+}
+
+/* Header */
+.dashboard-header-content {
+     margin-bottom: 0.5rem;
+}
+
+.dashboard-header-content h1 {
+     font-size: 1.8rem;
+     color: #1a202c;
+     margin-bottom: 0.5rem;
+     font-weight: 800;
+}
+
+.dashboard-header-content p {
+     color: #718096;
+}
+
+/* KPI Grid - 4 Colunas */
+.kpi-grid {
+     display: grid;
+     grid-template-columns: repeat(4, 1fr);
+     gap: 1.5rem;
+}
+
+/* Linha de Gráficos - Pizza menor, Barras maior */
+.charts-row {
+     display: grid;
+     grid-template-columns: 1fr 1.5fr;
+     gap: 1.5rem;
+}
+
+/* Cards de Gráfico */
+.chart-card {
+     background: white;
+     padding: 1.5rem;
+     border-radius: 16px;
+     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+     border: 1px solid #f7fafc;
+}
+
+.chart-card h3 {
+     font-size: 1.1rem;
+     font-weight: 700;
+     color: #2d3748;
+     margin-bottom: 2rem;
+}
+
+/* Ajuste no padding do Recharts para não cortar texto */
+.chart-wrapper {
+     margin-left: -20px;
+}
+
+.full-width {
+     width: 100%;
+}
+
+/* Relatórios */
+.reports-section {
+     margin-top: 1rem;
+}
+
+.reports-section h3 {
+     font-size: 1.2rem;
+     color: #2d3748;
+     margin-bottom: 1.5rem;
+     font-weight: 700;
+}
+
+.reports-grid {
+     display: grid;
+     grid-template-columns: repeat(3, 1fr);
+     gap: 1.5rem;
+}
+
+/* Loading */
+.loading-screen {
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     height: 100%;
+     color: #718096;
+     font-size: 1.2rem;
+}
+
+/* Responsividade */
+@media (max-width: 1024px) {
+     .kpi-grid {
+          grid-template-columns: 1fr 1fr;
+     }
+
+     .charts-row {
+          grid-template-columns: 1fr;
+     }
+}
+
+@media (max-width: 768px) {
+     .kpi-grid {
+          grid-template-columns: 1fr;
+     }
+
+     .reports-grid {
+          grid-template-columns: 1fr;
+     }
+}
