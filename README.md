@@ -1,76 +1,216 @@
-## Sistema para Registro Anônimo de Ocorrências em Ambiente Universitário - Sentinel
+# Sentinel - Sistema de Registro Anônimo de Ocorrências
 
 <p align="center">
    <img src="http://img.shields.io/static/v1?label=STATUS&message=EM%20DESENVOLVIMENTO&color=RED&style=for-the-badge" #vitrinedev/>
 </p>
 
+<p align="center">
+  <a href="#-sobre-o-projeto">Sobre</a> •
+  <a href="#-funcionalidades">Funcionalidades</a> •
+  <a href="#-modelagem">Modelagem</a> •
+  <a href="#-tecnologias">Tecnologias</a> •
+  <a href="#-como-executar">Como Executar</a> •
+  <a href="#-autores">Autores</a> •
+  <a href="#-licença">Licença</a>
+</p>
+
 ## Sobre o Projeto
-O sistema tem como finalidade fornecer um canal seguro, anônimo e acessível para que membros da comunidade universitária registrem relatos relacionados à segurança no campus, como furtos, situações de risco, iluminação deficiente, assédio ou problemas estruturais. O objetivo é permitir à instituição monitorar padrões, identificar áreas críticas e melhorar a atuação preventiva. 
 
-## Requisitos
+O **Sentinel** é um sistema desenvolvido para fornecer um canal seguro, anônimo e acessível para que membros da comunidade universitária registrem relatos relacionados à segurança no campus. 
 
-- Permitir o registro anônimo de relatos, sem autenticação obrigatória.
+### Objetivo
 
-- Armazenar textos de tamanhos variados, anexos opcionais (como fotos) e localizações aproximadas.
+Permitir à instituição:
+- Monitorar padrões de ocorrências
+- Identificar áreas críticas do campus
+- Melhorar a atuação preventiva
+- Proporcionar ambiente mais seguro para todos
 
-- Registrar categoria do problema, data, horário e setor da universidade.
-    
-- Permitir consulta filtrada por período, categoria, área do campus ou palavras-chave.
-    
-- Possibilitar atualização do status de cada ocorrência pela equipe responsável (pendente, analisando, resolvido).
+### Tipos de Ocorrências
 
-- Permitir visualização de estatísticas gerais, como volume de relatos por região ou tipo de ocorrência.
+O sistema permite o registro de diversos tipos de incidentes, como:
+- Furtos e roubos
+- Situações de risco
+- Iluminação deficiente
+- Assédio
+- Problemas estruturais
+- Outras questões de segurança 
 
-## Modelagem Conceitual
+## Funcionalidades
 
-Modelagem Conceitual do projeto com a notação ER.
+### Para Usuários (Público)
+- **Registro Anônimo**: Criar relatos sem necessidade de autenticação
+- **Anexos**: Adicionar fotos e evidências às ocorrências
+- **Localização**: Registrar local aproximado do incidente
+- **Consulta**: Filtrar ocorrências por período, categoria ou palavras-chave
+- **Visualização**: Acompanhar estatísticas gerais de segurança
 
-Feita na ferramenta brModelo.
+### Para Administradores
+- **Acesso Protegido**: Login administrativo para gestão
+- **Gerenciamento**: Atualizar status das ocorrências (pendente, em análise, resolvido)
+- **Dashboard**: Visualizar métricas e padrões de ocorrências
+- **Categorização**: Gerenciar setores e categorias
+- **Relatórios**: Analisar volume de relatos por região e tipo
+
+## Modelagem
+
+### Modelagem Conceitual
+
+Modelagem Conceitual do projeto utilizando a notação ER, desenvolvida na ferramenta brModelo.
 
 ![Modelagem Conceitual ER](/assets/Modelo%20Conceitual%20ER.png)
 
-## Modelagem Lógica
+### Modelagem Lógica
 
-Mapeamento Conceitual-Lógico do sistemas.
+Mapeamento Conceitual-Lógico do sistema utilizando a abordagem de projeto lógico de alto e baixo nível.
 
-Utilizada a abordagem de projeto lógico de alto e baixo nível.
-
-### Modelagem de Alto Nível
+#### Modelagem de Alto Nível
 
 ![Modelagem de Alto Nível](/assets/Modelagem%20Alto%20Nível.png)
 
-### Modelagem de Baixo Nível
+#### Modelagem de Baixo Nível
 
-- Modelagem de Ocorrência
+**Documento de Ocorrência**
 
 ![Documento de Ocorrência](/assets/Mod%20BN1.png)
 
-- Modelagem de Setor
+**Documento de Setor**
 
 ![Documento de Setor](/assets/Mod%20BN2.png)
 
-- Modelagem de Categoria
+**Documento de Categoria**
 
 ![Documento de Categoria](/assets/Mod%20BN3.png)
 
-## Tecnologias Utilizadas
+## Tecnologias
 
-- Back End:
-    
-  [![Node.js](https://img.shields.io/badge/Node.js-6DA55F?logo=node.js&logoColor=white)](#)
+### Backend
+[![Node.js](https://img.shields.io/badge/Node.js-6DA55F?logo=node.js&logoColor=white)](#)
+[![Express](https://img.shields.io/badge/Express.js-404d59.svg?logo=express&logoColor=white)](#)
 
-- Front End:
+### Frontend
+[![React](https://img.shields.io/badge/React-%2320232a.svg?logo=react&logoColor=%2361DAFB)](#)
+[![HTML](https://img.shields.io/badge/HTML-%23E34F26.svg?logo=html5&logoColor=white)](#)
+[![CSS](https://img.shields.io/badge/CSS-639?logo=css&logoColor=fff)](#)
+[![Vite](https://img.shields.io/badge/Vite-646CFF?logo=vite&logoColor=white)](#)
 
-  [![HTML](https://img.shields.io/badge/HTML-%23E34F26.svg?logo=html5&logoColor=white)](#) [![CSS](https://img.shields.io/badge/CSS-639?logo=css&logoColor=fff)](#) [![React](https://img.shields.io/badge/React-%2320232a.svg?logo=react&logoColor=%2361DAFB)](#)
+### Banco de Dados
+[![MongoDB](https://img.shields.io/badge/MongoDB-%234ea94b.svg?logo=mongodb&logoColor=white)](#)
 
-- Bando de Dados
+### Ferramentas de Desenvolvimento
+[![ESLint](https://img.shields.io/badge/ESLint-4B32C3?logo=eslint&logoColor=white)](#)
+[![Git](https://img.shields.io/badge/Git-F05032?logo=git&logoColor=white)](#)
 
-   
-  [![MongoDB](https://img.shields.io/badge/MongoDB-%234ea94b.svg?logo=mongodb&logoColor=white)](#)
+## Como Executar
+
+### Pré-requisitos
+
+Antes de começar, você precisará ter instalado:
+- [Node.js](https://nodejs.org/) (versão 14 ou superior)
+- [MongoDB](https://www.mongodb.com/) (ou acesso a uma instância MongoDB)
+
+### Clonando o Repositório
+
+```bash
+git clone https://github.com/SamuellAguiar/Trabalho_BD_II.git
+cd Trabalho_BD_II
+```
+
+### Configuração do Backend
+
+```bash
+cd app/server
+
+npm install
+
+# Configure as variáveis de ambiente
+# Crie um arquivo .env com as configurações do MongoDB
+
+node server.js
+```
+
+### Configuração do Frontend
+
+```bash
+cd app/client
+
+npm install
+ 
+npm run dev
+```
+
+### Acessando a Aplicação
+
+Após iniciar o servidor e o cliente, acesse:
+- **Frontend**: `http://localhost:5173`
+
+- **Backend API**: `http://localhost:3000`
+
+## Estrutura do Projeto
+
+```
+Trabalho_BD_II/
+├── app/
+│   ├── client/          # Aplicação React (Frontend)
+│   │   ├── src/
+│   │   │   ├── components/
+│   │   │   ├── pages/
+│   │   │   ├── routes/
+│   │   │   ├── services/
+│   │   │   ├── App.jsx
+│   │   │   ├── index.css
+│   │   │   └── main.jsx
+│   │   └── package.json
+│   └── server/          # API Node.js (Backend)
+│       ├── src/
+│       │   ├── config/
+│       │   ├── controllers/
+│       │   ├── middlewares/
+│       │   ├── repositories/
+│       │   ├── routes/
+│       │   ├── schemas/
+│       │   ├── services/
+│       │   ├── utils/
+│       │   └── app.js
+│       ├── package.json
+│       └── server.js
+├── assets/              # Imagens e recursos
+└── README.md
+```
 
 
 ## Autores
 
-- [Samuell Aguiar] (www.github.com/SamuellAguiar)
-- [Gabriel Roberto] (www.github.com/BielCandido)
-- [Albert Ofori] (www.github.com/AlbertJohnson994)
+<table>
+  <tr>
+    <td align="center">
+        <a href="https://github.com/AlbertJohnson994">
+          <img src="./assets/Albert.jpg" width="100px;" alt="Albert Ofori" style="border-radius: 50%;"/><br>
+          <sub>
+            <b>Albert Ofori</b>
+          </sub>
+        </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/BielCandido">
+        <img src="./assets/Gabriel.jpg" width="100px;" alt="Gabriel Roberto" style="border-radius: 50%;"/><br>
+        <sub>
+          <b>Gabriel Roberto</b>
+        </sub>
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/SamuellAguiar">
+        <img src="./assets/Samuell.jpg" width="100px;" alt="Samuell Aguiar" style="border-radius: 50%;"/><br>
+        <sub>
+          <b>Samuell Aguiar</b>
+        </sub>
+      </a>
+    </td>
+  </tr>
+</table>
+
+## Licença
+
+Este projeto foi desenvolvido como trabalho acadêmico para a disciplina de Banco de Dados II.
+
