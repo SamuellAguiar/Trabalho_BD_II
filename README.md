@@ -98,7 +98,6 @@ Mapeamento Conceitual-Lógico do sistema utilizando a abordagem de projeto lógi
 [![MongoDB](https://img.shields.io/badge/MongoDB-%234ea94b.svg?logo=mongodb&logoColor=white)](#)
 
 ### Ferramentas de Desenvolvimento
-[![ESLint](https://img.shields.io/badge/ESLint-4B32C3?logo=eslint&logoColor=white)](#)
 [![Git](https://img.shields.io/badge/Git-F05032?logo=git&logoColor=white)](#)
 
 ## Como Executar
