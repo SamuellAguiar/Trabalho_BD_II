@@ -3,7 +3,10 @@ import {
      BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
      PieChart, Pie, Cell, Legend
 } from 'recharts';
-import { FileText, Clock, Activity, CheckCircle, FileBarChart, Folder, Map as MapIcon } from 'lucide-react';
+import {
+     FileText, Clock, Activity, CheckCircle,
+     FileBarChart, Folder, Map as MapIcon, Calendar, AlertTriangle
+} from 'lucide-react';
 import { MapContainer, TileLayer } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 
@@ -11,29 +14,30 @@ import 'leaflet/dist/leaflet.css';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
+// Importe sua logo (opcional)
+import logoImg from '/favicon.png';
+
 import api from '../../services/api';
 import './Dashboard.css';
 
-// Componentes UI Reutilizáveis
+// Componentes UI
 import KpiCard from '../../components/ui/KpiCard';
 import ReportButton from '../../components/ui/ReportButton';
-import HeatmapLayer from '../../components/ui/HeatmapLayer'; // Componente criado anteriormente
+import HeatmapLayer from '../../components/ui/HeatmapLayer';
 
 const Dashboard = () => {
      const [loading, setLoading] = useState(true);
      const [data, setData] = useState([]);
 
-     // Estados para KPIs
+     // Estados de Dados
      const [kpis, setKpis] = useState({ total: 0, pendente: 0, analisando: 0, resolvido: 0 });
-
-     // Estados para Gráficos
      const [graficoStatus, setGraficoStatus] = useState([]);
      const [graficoCategoria, setGraficoCategoria] = useState([]);
      const [graficoSetor, setGraficoSetor] = useState([]);
-     const [graficoLinha, setGraficoLinha] = useState([]); // Tendência Temporal
-     const [pontosMapa, setPontosMapa] = useState([]);     // Dados do Heatmap
+     const [graficoLinha, setGraficoLinha] = useState([]);
+     const [pontosMapa, setPontosMapa] = useState([]);
 
-     // Cores do Gráfico de Pizza
+     // Cores do Sistema
      const COLORS_STATUS = {
           'PENDENTE': '#e53e3e',   // Vermelho
           'ANALISANDO': '#dd6b20', // Laranja
@@ -58,7 +62,7 @@ const Dashboard = () => {
      }
 
      const processarDados = (lista) => {
-          // 1. Calcular KPIs
+          // 1. KPIs
           const stats = {
                total: lista.length,
                pendente: lista.filter(i => i.status === 'PENDENTE').length,
@@ -67,7 +71,7 @@ const Dashboard = () => {
           };
           setKpis(stats);
 
-          // 2. Gráfico de Status (Pizza)
+          // 2. Gráfico Status (Pizza)
           const statusData = [
                { name: 'Pendente', value: stats.pendente, color: COLORS_STATUS.PENDENTE },
                { name: 'Em Andamento', value: stats.analisando, color: COLORS_STATUS.ANALISANDO },
@@ -75,7 +79,7 @@ const Dashboard = () => {
           ].filter(item => item.value > 0);
           setGraficoStatus(statusData);
 
-          // Helper para agrupar contagens
+          // 3. Agrupamentos (Barras)
           const agruparPor = (campo, nomePadrao) => {
                const map = {};
                lista.forEach(oc => {
@@ -88,15 +92,13 @@ const Dashboard = () => {
           setGraficoCategoria(agruparPor('nome_categoria', 'Outros'));
           setGraficoSetor(agruparPor('nome_setor', 'Desconhecido'));
 
-          // 3. Processar Padrão Temporal (Gráfico de Linha)
+          // 4. Evolução Temporal (Linha)
           const timeMap = {};
           lista.forEach(oc => {
-               // Formata data como DD/MM
                const dataFormatada = new Date(oc.data_hora).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
                timeMap[dataFormatada] = (timeMap[dataFormatada] || 0) + 1;
           });
 
-          // Ordena cronologicamente
           const linhaData = Object.keys(timeMap)
                .sort((a, b) => {
                     const [dA, mA] = a.split('/');
@@ -107,7 +109,7 @@ const Dashboard = () => {
 
           setGraficoLinha(linhaData);
 
-          // 4. Processar Mapa de Calor
+          // 5. Heatmap
           const coords = lista
                .filter(oc => oc.localizacao_geo && oc.localizacao_geo.coordinates)
                .map(oc => ({
@@ -117,39 +119,139 @@ const Dashboard = () => {
           setPontosMapa(coords);
      };
 
-     // --- FUNÇÃO GERAR PDF ---
-     const gerarRelatorioPDF = (tipoAgrupamento) => {
+     // --- FUNÇÃO GERADORA DE RELATÓRIOS PDF (Atualizada) ---
+     const gerarRelatorioPDF = (tipoRelatorio) => {
           try {
                const doc = new jsPDF();
+               const primaryColor = [108, 99, 255]; // Roxo
+               const currentDate = new Date().toLocaleDateString('pt-BR');
 
-               // Cabeçalho
-               doc.setFontSize(18);
-               doc.text(`Relatório de Ocorrências - Por ${tipoAgrupamento}`, 14, 22);
+               // --- LOGO (Tenta carregar) ---
+               try {
+                    doc.addImage(logoImg, 'PNG', 14, 10, 25, 25);
+               } catch (e) { /* Sem logo, segue o jogo */ }
+
+               // --- CABEÇALHO ---
+               doc.setFont("helvetica", "bold");
+               doc.setFontSize(22);
+               doc.setTextColor(45, 55, 72);
+               doc.text("Sentinel", 45, 20);
+
                doc.setFontSize(10);
-               doc.text(`Gerado em: ${new Date().toLocaleDateString()}`, 14, 30);
+               doc.setFont("helvetica", "normal");
+               doc.setTextColor(100);
+               doc.text("Sistema de Gestão de Ocorrências e Monitoramento", 45, 26);
 
-               // Dados da Tabela
-               const dadosTabela = data.map(item => [
-                    item.descricao.substring(0, 40) + (item.descricao.length > 40 ? '...' : ''),
-                    item.nome_setor || 'N/A',
-                    item.nome_categoria || 'N/A',
-                    item.status,
-                    new Date(item.data_hora).toLocaleDateString()
-               ]);
+               // Linha Divisória
+               doc.setDrawColor(...primaryColor);
+               doc.setLineWidth(1);
+               doc.line(14, 38, 196, 38);
 
-               // Gerar Tabela
+               // Título Específico
+               doc.setFontSize(16);
+               doc.setFont("helvetica", "bold");
+               doc.setTextColor(45, 55, 72);
+               doc.text(`Relatório - ${tipoRelatorio}`, 14, 50);
+
+               // --- LÓGICA DE DADOS POR TIPO ---
+               let colunas = [];
+               let dadosFormatados = [];
+               let dadosFiltrados = [...data]; // Cópia dos dados
+
+               switch (tipoRelatorio) {
+                    case 'Zonas Críticas': // (Por Setor)
+                         colunas = [['Zona / Setor', 'Qtd. Ocorrências', 'Último Registro']];
+                         // Agrupa e conta
+                         const countSetor = {};
+                         const lastDateSetor = {};
+                         dadosFiltrados.forEach(d => {
+                              const setor = d.nome_setor || 'N/A';
+                              countSetor[setor] = (countSetor[setor] || 0) + 1;
+                              lastDateSetor[setor] = new Date(d.data_hora).toLocaleDateString();
+                         });
+                         dadosFormatados = Object.keys(countSetor).map(key => [
+                              key, countSetor[key], lastDateSetor[key]
+                         ]).sort((a, b) => b[1] - a[1]); // Ordena por quantidade (descrescente)
+                         break;
+
+                    case 'Cronológico':
+                         colunas = [['Data/Hora', 'Descrição', 'Setor', 'Status']];
+                         dadosFormatados = dadosFiltrados
+                              .sort((a, b) => new Date(b.data_hora) - new Date(a.data_hora)) // Mais recente primeiro
+                              .map(item => [
+                                   new Date(item.data_hora).toLocaleString('pt-BR'),
+                                   item.descricao.substring(0, 40) + '...',
+                                   item.nome_setor || 'N/A',
+                                   item.status
+                              ]);
+                         break;
+
+                    case 'Pendências':
+                         colunas = [['Prioridade', 'Descrição', 'Setor', 'Aberto em']];
+                         dadosFormatados = dadosFiltrados
+                              .filter(i => i.status !== 'RESOLVIDO') // Só o que não está resolvido
+                              .sort((a, b) => new Date(a.data_hora) - new Date(b.data_hora)) // Mais antigo primeiro (urgente)
+                              .map(item => [
+                                   item.status === 'PENDENTE' ? 'ALTA' : 'MÉDIA',
+                                   item.descricao.substring(0, 40) + '...',
+                                   item.nome_setor || 'N/A',
+                                   new Date(item.data_hora).toLocaleDateString()
+                              ]);
+                         break;
+
+                    case 'Categorias':
+                         colunas = [['Categoria', 'Descrição', 'Status', 'Data']];
+                         dadosFormatados = dadosFiltrados
+                              .sort((a, b) => (a.nome_categoria || '').localeCompare(b.nome_categoria || ''))
+                              .map(item => [
+                                   item.nome_categoria || 'Geral',
+                                   item.descricao.substring(0, 40) + '...',
+                                   item.status,
+                                   new Date(item.data_hora).toLocaleDateString()
+                              ]);
+                         break;
+
+                    default: // Geral/Status
+                         colunas = [['Status', 'Descrição', 'Setor', 'Categoria']];
+                         dadosFormatados = dadosFiltrados.map(item => [
+                              item.status,
+                              item.descricao.substring(0, 40) + '...',
+                              item.nome_setor || 'N/A',
+                              item.nome_categoria || 'N/A'
+                         ]);
+               }
+
+               // --- BOX DE RESUMO ---
+               doc.setFillColor(247, 250, 252);
+               doc.roundedRect(14, 55, 182, 20, 3, 3, 'F');
+               doc.setFontSize(10);
+               doc.setFont("helvetica", "normal");
+               doc.text(`Total de Registros Listados: ${dadosFormatados.length}`, 20, 68);
+               doc.text(`Gerado em: ${currentDate}`, 150, 68);
+
+               // --- TABELA ---
                autoTable(doc, {
-                    head: [['Descrição', 'Setor', 'Categoria', 'Status', 'Data']],
-                    body: dadosTabela,
-                    startY: 35,
-                    headStyles: { fillColor: [108, 99, 255] },
-                    styles: { fontSize: 8 },
-                    alternateRowStyles: { fillColor: [245, 245, 255] }
+                    head: colunas,
+                    body: dadosFormatados,
+                    startY: 85,
+                    theme: 'grid',
+                    headStyles: { fillColor: primaryColor, fontStyle: 'bold' },
+                    styles: { fontSize: 9, cellPadding: 3 },
+                    alternateRowStyles: { fillColor: [249, 250, 251] },
+                    didDrawPage: function (data) {
+                         // Rodapé
+                         const pageHeight = doc.internal.pageSize.height;
+                         doc.setDrawColor(200);
+                         doc.line(14, pageHeight - 15, 196, pageHeight - 15);
+                         doc.setFontSize(8);
+                         doc.text('Sentinel - Relatório Oficial', 14, pageHeight - 10);
+                         doc.text('Página ' + doc.internal.getNumberOfPages(), 180, pageHeight - 10);
+                    }
                });
 
-               doc.save(`relatorio_${tipoAgrupamento.toLowerCase()}.pdf`);
+               doc.save(`Relatorio_${tipoRelatorio.replace(/ /g, '_')}.pdf`);
           } catch (error) {
-               console.error("Erro ao gerar PDF:", error);
+               console.error("Erro PDF:", error);
                alert("Erro ao gerar PDF.");
           }
      };
@@ -159,13 +261,13 @@ const Dashboard = () => {
      return (
           <div className="dashboard-container">
 
-               {/* Título da Página */}
+               {/* Título */}
                <div className="dashboard-header-content">
                     <h1>Visão Geral</h1>
-                    <p>Acompanhe os indicadores e geolocalização do campus</p>
+                    <p>Painel de controle e monitoramento do campus</p>
                </div>
 
-               {/* --- KPI CARDS (4 Colunas) --- */}
+               {/* KPI Cards */}
                <div className="kpi-grid">
                     <KpiCard title="Total" value={kpis.total} icon={FileText} color="purple" />
                     <KpiCard title="Pendentes" value={kpis.pendente} icon={Clock} color="yellow" />
@@ -173,49 +275,31 @@ const Dashboard = () => {
                     <KpiCard title="Resolvidos" value={kpis.resolvido} icon={CheckCircle} color="green" />
                </div>
 
-               {/* --- LINHA NOVA: EVOLUÇÃO TEMPORAL --- */}
+               {/* Gráfico Temporal */}
                <div className="chart-card full-width">
-                    <h3>📈 Evolução de Relatos (Últimos dias)</h3>
+                    <h3>📈 Evolução Temporal (Últimos Registros)</h3>
                     <div className="chart-wrapper">
                          <ResponsiveContainer width="100%" height={300}>
                               <LineChart data={graficoLinha}>
                                    <CartesianGrid strokeDasharray="3 3" vertical={false} />
                                    <XAxis dataKey="data" fontSize={12} tickLine={false} axisLine={false} />
                                    <YAxis allowDecimals={false} axisLine={false} tickLine={false} />
-                                   <Tooltip contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 2px 10px rgba(0,0,0,0.1)' }} />
-                                   <Line
-                                        type="monotone"
-                                        dataKey="quantidade"
-                                        stroke="#6c63ff"
-                                        strokeWidth={3}
-                                        dot={{ r: 4, fill: '#6c63ff', strokeWidth: 2, stroke: '#fff' }}
-                                        activeDot={{ r: 6 }}
-                                   />
+                                   <Tooltip />
+                                   <Line type="monotone" dataKey="quantidade" stroke="#6c63ff" strokeWidth={3} dot={{ r: 4 }} activeDot={{ r: 6 }} />
                               </LineChart>
                          </ResponsiveContainer>
                     </div>
                </div>
 
-               {/* --- LINHA DE GRÁFICOS (Pizza e Barras) --- */}
+               {/* Gráficos Pizza e Barra */}
                <div className="charts-row">
-
-                    {/* Gráfico Pizza */}
                     <div className="chart-card">
-                         <h3>Distribuição por Status</h3>
+                         <h3>Status das Ocorrências</h3>
                          <div className="chart-wrapper">
                               <ResponsiveContainer width="100%" height={250}>
                                    <PieChart>
-                                        <Pie
-                                             data={graficoStatus}
-                                             cx="50%" cy="50%"
-                                             innerRadius={60}
-                                             outerRadius={80}
-                                             paddingAngle={5}
-                                             dataKey="value"
-                                        >
-                                             {graficoStatus.map((entry, index) => (
-                                                  <Cell key={`cell-${index}`} fill={entry.color} />
-                                             ))}
+                                        <Pie data={graficoStatus} cx="50%" cy="50%" innerRadius={60} outerRadius={80} paddingAngle={5} dataKey="value">
+                                             {graficoStatus.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.color} />)}
                                         </Pie>
                                         <Tooltip />
                                         <Legend verticalAlign="bottom" />
@@ -224,7 +308,6 @@ const Dashboard = () => {
                          </div>
                     </div>
 
-                    {/* Gráfico Barras (Categorias) */}
                     <div className="chart-card">
                          <h3>Ocorrências por Categoria</h3>
                          <div className="chart-wrapper">
@@ -241,46 +324,53 @@ const Dashboard = () => {
                     </div>
                </div>
 
-               {/* --- LINHA NOVA: MAPA DE CALOR --- */}
+               {/* Mapa de Calor */}
                <div className="chart-card full-width" style={{ padding: 0, overflow: 'hidden' }}>
                     <div style={{ padding: '1.5rem 1.5rem 0 1.5rem' }}>
-                         <h3>🔥 Mapa de Calor (Áreas Críticas)</h3>
+                         <h3>🔥 Mapa de Calor (Zonas Críticas)</h3>
                     </div>
                     <div style={{ height: '400px', width: '100%', position: 'relative' }}>
-                         <MapContainer
-                              center={[-20.398, -43.508]} // ATENÇÃO: Coloque aqui a Lat/Lng central da sua Universidade/Cidade
-                              zoom={14}
-                              style={{ height: '100%', width: '100%' }}
-                         >
+                         {/* AJUSTE AQUI AS COORDENADAS DO SEU CAMPUS */}
+                         <MapContainer center={[-20.398, -43.508]} zoom={15} style={{ height: '100%', width: '100%' }}>
                               <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
                               <HeatmapLayer points={pontosMapa} />
                          </MapContainer>
                     </div>
                </div>
 
-               {/* --- GRÁFICO DE SETORES --- */}
-               <div className="chart-card full-width">
-                    <h3>Ocorrências por Setor</h3>
-                    <div className="chart-wrapper">
-                         <ResponsiveContainer width="100%" height={300}>
-                              <BarChart data={graficoSetor}>
-                                   <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                                   <XAxis dataKey="name" fontSize={11} tickLine={false} axisLine={false} />
-                                   <YAxis allowDecimals={false} axisLine={false} tickLine={false} />
-                                   <Tooltip cursor={{ fill: '#f7fafc' }} />
-                                   <Bar dataKey="quantidade" fill="#00b894" radius={[4, 4, 0, 0]} barSize={50} />
-                              </BarChart>
-                         </ResponsiveContainer>
-                    </div>
-               </div>
-
-               {/* --- BOTÕES DE RELATÓRIO --- */}
+               {/* Seção de Relatórios (Expandida) */}
                <div className="reports-section">
-                    <h3>📥 Gerar Relatórios (PDF)</h3>
+                    <h3>📥 Central de Relatórios</h3>
                     <div className="reports-grid">
-                         <ReportButton icon={FileBarChart} label="Relatório Status" onClick={() => gerarRelatorioPDF('Status')} />
-                         <ReportButton icon={Folder} label="Relatório Categorias" onClick={() => gerarRelatorioPDF('Categoria')} />
-                         <ReportButton icon={MapIcon} label="Relatório Setores" onClick={() => gerarRelatorioPDF('Setor')} />
+
+                         {/* Relatório 1: Por Zonas (O que você pediu) */}
+                         <ReportButton
+                              icon={MapIcon}
+                              label="Relatório de Zonas"
+                              onClick={() => gerarRelatorioPDF('Zonas Críticas')}
+                         />
+
+                         {/* Relatório 2: Cronológico (Histórico completo) */}
+                         <ReportButton
+                              icon={Calendar}
+                              label="Histórico Cronológico"
+                              onClick={() => gerarRelatorioPDF('Cronológico')}
+                         />
+
+                         {/* Relatório 3: Operacional (Pendências) */}
+                         <ReportButton
+                              icon={AlertTriangle}
+                              label="Relatório de Pendências"
+                              onClick={() => gerarRelatorioPDF('Pendências')}
+                         />
+
+                         {/* Relatório 4: Por Categoria */}
+                         <ReportButton
+                              icon={Folder}
+                              label="Análise por Categoria"
+                              onClick={() => gerarRelatorioPDF('Categorias')}
+                         />
+
                     </div>
                </div>
 
