@@ -172,7 +172,7 @@ const GerenciarOcorrencias = () => {
                                                   className="select-mini"
                                              >
                                                   <option value="PENDENTE">Pendente</option>
-                                                  <option value="ANALISANDO">Analisando</option>
+                                                  <option value="ANALISANDO">Em Andamento</option>
                                                   <option value="RESOLVIDO">Resolvido</option>
                                              </select>
                                              <button className="btn-mini-save" onClick={handleSalvarStatus}><Save size={16} /></button>
