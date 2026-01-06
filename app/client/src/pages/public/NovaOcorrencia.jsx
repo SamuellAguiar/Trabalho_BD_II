@@ -42,7 +42,7 @@ const NovaOcorrencia = () => {
      const handleCaptureLocation = () => {
           setLocStatus('loading');
           if (!navigator.geolocation) {
-               alert("Seu navegador não suporta geolocalização.");
+               toast.error("Seu navegador não suporta geolocalização.");
                setLocStatus('error');
                return;
           }
@@ -57,7 +57,7 @@ const NovaOcorrencia = () => {
                },
                (error) => {
                     console.error(error);
-                    alert("Erro ao obter localização. Permita o acesso ao GPS.");
+                    toast.error("Erro ao obter localização. Verifique as permissões.");
                     setLocStatus('error');
                }
           );
@@ -74,11 +74,11 @@ const NovaOcorrencia = () => {
 
           // Validação Básica
           if (!location.lat || !location.lng) {
-               alert("Por favor, capture a localização antes de enviar.");
+               toast.error("Por favor, capture a localização antes de enviar.");
                return;
           }
           if (!descricao || !setorId || !categoriaId) {
-               alert("Preencha todos os campos obrigatórios.");
+               toast.error("Preencha todos os campos obrigatórios.");
                return;
           }
 
@@ -103,12 +103,12 @@ const NovaOcorrencia = () => {
                     headers: { 'Content-Type': 'multipart/form-data' }
                });
 
-               alert("Ocorrência registrada com sucesso!");
+               toast.success("Ocorrência registrada com sucesso!");
                navigate('/lista'); // Redireciona para a lista
           } catch (error) {
                console.error(error);
                const msg = error.response?.data?.erro || "Erro ao registrar.";
-               alert(msg);
+               toast.error(msg);
           } finally {
                setSubmitting(false);
           }

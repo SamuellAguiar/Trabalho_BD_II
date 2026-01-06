@@ -39,6 +39,10 @@ router.get('/ocorrencias', OcorrenciaController.listar);
 // Atualização de Status (ex: Pendente -> Resolvido)
 router.patch('/ocorrencias/:id/status', OcorrenciaController.atualizarStatus);
 
+router.get('/ocorrencias/:id', OcorrenciaController.buscarPorId);
+
+router.delete('/ocorrencias/:id/fotos/:nomeArquivo', OcorrenciaController.removerAnexo);  
+
 router.delete('/ocorrencias/:id', OcorrenciaController.deletar);
 
 // =========================================================

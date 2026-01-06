@@ -2,19 +2,20 @@ import { useState, useEffect } from 'react';
 import { Search, MapPin, Calendar, Tag } from 'lucide-react';
 import api from '../../services/api';
 import './Listagem.css';
+import { Link } from 'react-router-dom';
 
 // Componentes
 import { Select, Input } from '../../components/ui/FormComponents';
 import Badge from '../../components/ui/Badge';
 
 const Listagem = () => {
-     // Estados de Dados
      const [ocorrencias, setOcorrencias] = useState([]);
      const [setores, setSetores] = useState([]);
      const [categorias, setCategorias] = useState([]);
      const [loading, setLoading] = useState(true);
+     const [dataInicio, setDataInicio] = useState('');
+     const [dataFim, setDataFim] = useState('');
 
-     // Estados de Filtro
      const [busca, setBusca] = useState('');
      const [filtroStatus, setFiltroStatus] = useState('');
      const [filtroCategoria, setFiltroCategoria] = useState('');
@@ -38,7 +39,9 @@ const Listagem = () => {
                          busca: busca,
                          status: filtroStatus,
                          categoriaId: filtroCategoria,
-                         setorId: filtroSetor
+                         setorId: filtroSetor,
+                         dataInicio,
+                         dataFim
                     };
 
                     const response = await api.get('/ocorrencias', { params });
@@ -56,7 +59,7 @@ const Listagem = () => {
           }, 500);
 
           return () => clearTimeout(timeoutId);
-     }, [busca, filtroStatus, filtroCategoria, filtroSetor]);
+     }, [busca, filtroStatus, filtroCategoria, filtroSetor, dataInicio, dataFim]);
 
      // Função auxiliar para formatar data
      const formatData = (isoDate) => {
@@ -122,6 +125,24 @@ const Listagem = () => {
                                    onChange={e => setFiltroSetor(e.target.value)}
                               />
                          </div>
+
+                         <div className="date-filter-group">
+                              <input
+                                   type="date"
+                                   className="form-input"
+                                   value={dataInicio}
+                                   onChange={e => setDataInicio(e.target.value)}
+                                   title="Data Início"
+                              />
+                              <span className="date-separator">até</span>
+                              <input
+                                   type="date"
+                                   className="form-input"
+                                   value={dataFim}
+                                   onChange={e => setDataFim(e.target.value)}
+                                   title="Data Fim"
+                              />
+                         </div>
                     </div>
                </div>
 
@@ -140,9 +161,11 @@ const Listagem = () => {
                          ocorrencias.map((item, index) => (
                               <div key={item._id} className="occurrence-card">
                                    <div className="card-header">
-                                        <h3 className="occurrence-title">
-                                             Ocorrência #{item._id.slice(-6).toUpperCase()}
-                                        </h3>
+                                        <Link to={`/ocorrencia/${item._id}`} style={{ textDecoration: 'none' }}>
+                                             <h3 className="occurrence-title">
+                                                  Ocorrência #{item._id.slice(-6).toUpperCase()}
+                                             </h3>
+                                        </Link>
                                         <Badge status={item.status} />
                                    </div>
 

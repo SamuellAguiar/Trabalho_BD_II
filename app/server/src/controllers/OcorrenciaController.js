@@ -33,7 +33,6 @@ class OcorrenciaController {
           }
      }
 
-     // ... métodos registrar e listar ...
 
      async atualizarStatus(req, res) {
           try {
@@ -46,6 +45,32 @@ class OcorrenciaController {
                return res.status(200).json({ mensagem: "Status atualizado com sucesso!" });
           } catch (error) {
                return res.status(400).json({ erro: error.message });
+          }
+     }
+
+     async buscarPorId(req, res, next) {
+          try {
+               const db = dbInstance.getDb();
+               const service = new OcorrenciaService(db);
+               const { id } = req.params;
+
+               const ocorrencia = await service.buscarPorId(id);
+               return res.status(200).json(ocorrencia);
+          } catch (error) {
+               next(error);
+          }
+     }
+
+     async removerAnexo(req, res, next) {
+          try {
+               const db = dbInstance.getDb();
+               const service = new OcorrenciaService(db);
+               const { id, nomeArquivo } = req.params; // Vamos passar o nome na URL
+
+               await service.removerAnexo(id, nomeArquivo);
+               return res.status(200).json({ mensagem: "Foto removida." });
+          } catch (error) {
+               next(error);
           }
      }
 

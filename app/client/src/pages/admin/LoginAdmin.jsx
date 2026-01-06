@@ -4,6 +4,7 @@ import { Lock, User, ArrowRight } from 'lucide-react';
 import './LoginAdmin.css';
 import Button from '../../components/ui/Button';
 import { Input, FormGroup } from '../../components/ui/FormComponents';
+import { toast } from 'react-toastify';
 
 const LoginAdmin = () => {
      const navigate = useNavigate();
@@ -14,14 +15,12 @@ const LoginAdmin = () => {
      const handleLogin = (e) => {
           e.preventDefault();
 
-          // --- AUTENTICAÇÃO SIMULADA ---
-          // Em um sistema real, aqui você faria: await api.post('/login', ...)
-          // Para o trabalho, vamos validar hardcoded:
           if (email === 'admin' && senha === '1234') {
-               // Salva uma "chave" no navegador
                localStorage.setItem('admin_token', 'true');
-               navigate('/admin'); // Manda para o Dashboard
+               toast.success("Bem-vindo de volta, Administrador!");
+               navigate('/admin');
           } else {
+               toast.error('Credenciais inválidas.');
                setError('Credenciais inválidas.');
           }
      };

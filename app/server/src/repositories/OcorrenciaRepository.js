@@ -80,9 +80,35 @@ class OcorrenciaRepository {
      async delete(id) {
           return await this.collection.deleteOne({ _id: new ObjectId(id) });
      }
-
+     
      async findById(id) {
-          return await this.collection.findOne({ _id: new ObjectId(id) });
+          // Precisamos do lookup aqui também para trazer os nomes de setor/categoria
+          const pipeline = [
+               { $match: { _id: new ObjectId(id) } },
+               {
+                    $lookup: { from: 'setores', localField: 'Setor_REF', foreignField: '_id', as: 'detalhes_setor' }
+               },
+               {
+                    $lookup: { from: 'categorias', localField: 'Categoria_REF', foreignField: '_id', as: 'detalhes_categoria' }
+               },
+               {
+                    $project: {
+                         descricao: 1, data_hora: 1, status: 1, localizacao_geo: 1, anexos: 1,
+                         nome_setor: { $arrayElemAt: ["$detalhes_setor.nome", 0] },
+                         nome_categoria: { $arrayElemAt: ["$detalhes_categoria.nome", 0] }
+                    }
+               }
+          ];
+          const result = await this.collection.aggregate(pipeline).toArray();
+          return result[0]; // Retorna o primeiro (e único) item
+     }
+
+     async removeAnexo(idOcorrencia, caminhoArquivo) {
+          // $pull remove um item de um array que corresponda à condição
+          return await this.collection.updateOne(
+               { _id: new ObjectId(idOcorrencia) },
+               { $pull: { anexos: { caminho_arquivo: caminhoArquivo } } }
+          );
      }
 }
 

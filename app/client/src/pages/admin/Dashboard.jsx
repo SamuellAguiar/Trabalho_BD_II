@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
 import {
-     BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
+     BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
      PieChart, Pie, Cell, Legend
 } from 'recharts';
-import { FileText, Clock, Activity, CheckCircle, FileBarChart, Folder, Map } from 'lucide-react';
+import { FileText, Clock, Activity, CheckCircle, FileBarChart, Folder, Map as MapIcon } from 'lucide-react';
+import { MapContainer, TileLayer } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
 
-// IMPORTAÇÃO DE PDF CORRIGIDA
+// Bibliotecas de PDF
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
@@ -15,6 +17,7 @@ import './Dashboard.css';
 // Componentes UI Reutilizáveis
 import KpiCard from '../../components/ui/KpiCard';
 import ReportButton from '../../components/ui/ReportButton';
+import HeatmapLayer from '../../components/ui/HeatmapLayer'; // Componente criado anteriormente
 
 const Dashboard = () => {
      const [loading, setLoading] = useState(true);
@@ -27,6 +30,8 @@ const Dashboard = () => {
      const [graficoStatus, setGraficoStatus] = useState([]);
      const [graficoCategoria, setGraficoCategoria] = useState([]);
      const [graficoSetor, setGraficoSetor] = useState([]);
+     const [graficoLinha, setGraficoLinha] = useState([]); // Tendência Temporal
+     const [pontosMapa, setPontosMapa] = useState([]);     // Dados do Heatmap
 
      // Cores do Gráfico de Pizza
      const COLORS_STATUS = {
@@ -62,7 +67,7 @@ const Dashboard = () => {
           };
           setKpis(stats);
 
-          // 2. Preparar Gráfico de Status (Pizza)
+          // 2. Gráfico de Status (Pizza)
           const statusData = [
                { name: 'Pendente', value: stats.pendente, color: COLORS_STATUS.PENDENTE },
                { name: 'Em Andamento', value: stats.analisando, color: COLORS_STATUS.ANALISANDO },
@@ -82,82 +87,67 @@ const Dashboard = () => {
 
           setGraficoCategoria(agruparPor('nome_categoria', 'Outros'));
           setGraficoSetor(agruparPor('nome_setor', 'Desconhecido'));
+
+          // 3. Processar Padrão Temporal (Gráfico de Linha)
+          const timeMap = {};
+          lista.forEach(oc => {
+               // Formata data como DD/MM
+               const dataFormatada = new Date(oc.data_hora).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+               timeMap[dataFormatada] = (timeMap[dataFormatada] || 0) + 1;
+          });
+
+          // Ordena cronologicamente
+          const linhaData = Object.keys(timeMap)
+               .sort((a, b) => {
+                    const [dA, mA] = a.split('/');
+                    const [dB, mB] = b.split('/');
+                    return new Date(2025, mA - 1, dA) - new Date(2025, mB - 1, dB);
+               })
+               .map(key => ({ data: key, quantidade: timeMap[key] }));
+
+          setGraficoLinha(linhaData);
+
+          // 4. Processar Mapa de Calor
+          const coords = lista
+               .filter(oc => oc.localizacao_geo && oc.localizacao_geo.coordinates)
+               .map(oc => ({
+                    lat: oc.localizacao_geo.coordinates[1],
+                    lng: oc.localizacao_geo.coordinates[0]
+               }));
+          setPontosMapa(coords);
      };
 
      // --- FUNÇÃO GERAR PDF ---
-     const gerarRelatorioPDF = (tipoRelatorio) => {
+     const gerarRelatorioPDF = (tipoAgrupamento) => {
           try {
                const doc = new jsPDF();
 
-               // Cabeçalho Padrão
+               // Cabeçalho
                doc.setFontSize(18);
-               doc.setTextColor(40, 40, 40);
-               doc.text(`Relatório de Ocorrências - Foco em ${tipoRelatorio}`, 14, 22);
-
+               doc.text(`Relatório de Ocorrências - Por ${tipoAgrupamento}`, 14, 22);
                doc.setFontSize(10);
-               doc.setTextColor(100);
                doc.text(`Gerado em: ${new Date().toLocaleDateString()}`, 14, 30);
 
-               // --- PERSONALIZAÇÃO POR TIPO ---
-               let colunas = [];
-               let dadosFormatados = [];
-               let corCabecalho = [108, 99, 255]; // Roxo padrão
-
-               // 1. Relatório por CATEGORIA
-               if (tipoRelatorio === 'Categoria') {
-                    corCabecalho = [221, 107, 32]; // Laranja
-                    colunas = [['Categoria', 'Descrição', 'Setor', 'Status']];
-
-                    // Ordena por Categoria
-                    const dadosOrdenados = [...data].sort((a, b) => (a.nome_categoria || '').localeCompare(b.nome_categoria || ''));
-
-                    dadosFormatados = dadosOrdenados.map(item => [
-                         item.nome_categoria || 'Sem Categoria',
-                         item.descricao.substring(0, 40) + '...',
-                         item.nome_setor || 'N/A',
-                         item.status
-                    ]);
-               }
-               // 2. Relatório por SETOR
-               else if (tipoRelatorio === 'Setor') {
-                    corCabecalho = [0, 184, 148]; // Verde
-                    colunas = [['Setor', 'Descrição', 'Categoria', 'Status']];
-
-                    const dadosOrdenados = [...data].sort((a, b) => (a.nome_setor || '').localeCompare(b.nome_setor || ''));
-
-                    dadosFormatados = dadosOrdenados.map(item => [
-                         item.nome_setor || 'Sem Setor',
-                         item.descricao.substring(0, 40) + '...',
-                         item.nome_categoria || 'N/A',
-                         item.status
-                    ]);
-               }
-               // 3. Relatório por STATUS (Geral)
-               else {
-                    colunas = [['Status', 'Descrição', 'Setor', 'Categoria', 'Data']];
-
-                    const dadosOrdenados = [...data].sort((a, b) => a.status.localeCompare(b.status));
-
-                    dadosFormatados = dadosOrdenados.map(item => [
-                         item.status,
-                         item.descricao.substring(0, 35) + '...',
-                         item.nome_setor || 'N/A',
-                         item.nome_categoria || 'N/A',
-                         new Date(item.data_hora).toLocaleDateString()
-                    ]);
-               }
+               // Dados da Tabela
+               const dadosTabela = data.map(item => [
+                    item.descricao.substring(0, 40) + (item.descricao.length > 40 ? '...' : ''),
+                    item.nome_setor || 'N/A',
+                    item.nome_categoria || 'N/A',
+                    item.status,
+                    new Date(item.data_hora).toLocaleDateString()
+               ]);
 
                // Gerar Tabela
                autoTable(doc, {
-                    head: colunas,
-                    body: dadosFormatados,
+                    head: [['Descrição', 'Setor', 'Categoria', 'Status', 'Data']],
+                    body: dadosTabela,
                     startY: 35,
-                    headStyles: { fillColor: corCabecalho },
-                    styles: { fontSize: 9 },
-                    alternateRowStyles: { fillColor: [245, 245, 250] }
+                    headStyles: { fillColor: [108, 99, 255] },
+                    styles: { fontSize: 8 },
+                    alternateRowStyles: { fillColor: [245, 245, 255] }
                });
 
-               doc.save(`relatorio_${tipoRelatorio.toLowerCase()}.pdf`);
+               doc.save(`relatorio_${tipoAgrupamento.toLowerCase()}.pdf`);
           } catch (error) {
                console.error("Erro ao gerar PDF:", error);
                alert("Erro ao gerar PDF.");
@@ -169,10 +159,10 @@ const Dashboard = () => {
      return (
           <div className="dashboard-container">
 
-               {/* Título da Página (Sem abas, pois agora temos Sidebar) */}
+               {/* Título da Página */}
                <div className="dashboard-header-content">
                     <h1>Visão Geral</h1>
-                    <p>Acompanhe os indicadores do campus em tempo real</p>
+                    <p>Acompanhe os indicadores e geolocalização do campus</p>
                </div>
 
                {/* --- KPI CARDS (4 Colunas) --- */}
@@ -183,7 +173,30 @@ const Dashboard = () => {
                     <KpiCard title="Resolvidos" value={kpis.resolvido} icon={CheckCircle} color="green" />
                </div>
 
-               {/* --- LINHA 1 DE GRÁFICOS --- */}
+               {/* --- LINHA NOVA: EVOLUÇÃO TEMPORAL --- */}
+               <div className="chart-card full-width">
+                    <h3>📈 Evolução de Relatos (Últimos dias)</h3>
+                    <div className="chart-wrapper">
+                         <ResponsiveContainer width="100%" height={300}>
+                              <LineChart data={graficoLinha}>
+                                   <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                                   <XAxis dataKey="data" fontSize={12} tickLine={false} axisLine={false} />
+                                   <YAxis allowDecimals={false} axisLine={false} tickLine={false} />
+                                   <Tooltip contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 2px 10px rgba(0,0,0,0.1)' }} />
+                                   <Line
+                                        type="monotone"
+                                        dataKey="quantidade"
+                                        stroke="#6c63ff"
+                                        strokeWidth={3}
+                                        dot={{ r: 4, fill: '#6c63ff', strokeWidth: 2, stroke: '#fff' }}
+                                        activeDot={{ r: 6 }}
+                                   />
+                              </LineChart>
+                         </ResponsiveContainer>
+                    </div>
+               </div>
+
+               {/* --- LINHA DE GRÁFICOS (Pizza e Barras) --- */}
                <div className="charts-row">
 
                     {/* Gráfico Pizza */}
@@ -211,7 +224,7 @@ const Dashboard = () => {
                          </div>
                     </div>
 
-                    {/* Gráfico Barras (Categorias) - Roxo */}
+                    {/* Gráfico Barras (Categorias) */}
                     <div className="chart-card">
                          <h3>Ocorrências por Categoria</h3>
                          <div className="chart-wrapper">
@@ -228,7 +241,24 @@ const Dashboard = () => {
                     </div>
                </div>
 
-               {/* --- LINHA 2 DE GRÁFICOS (Full Width) --- */}
+               {/* --- LINHA NOVA: MAPA DE CALOR --- */}
+               <div className="chart-card full-width" style={{ padding: 0, overflow: 'hidden' }}>
+                    <div style={{ padding: '1.5rem 1.5rem 0 1.5rem' }}>
+                         <h3>🔥 Mapa de Calor (Áreas Críticas)</h3>
+                    </div>
+                    <div style={{ height: '400px', width: '100%', position: 'relative' }}>
+                         <MapContainer
+                              center={[-20.398, -43.508]} // ATENÇÃO: Coloque aqui a Lat/Lng central da sua Universidade/Cidade
+                              zoom={14}
+                              style={{ height: '100%', width: '100%' }}
+                         >
+                              <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+                              <HeatmapLayer points={pontosMapa} />
+                         </MapContainer>
+                    </div>
+               </div>
+
+               {/* --- GRÁFICO DE SETORES --- */}
                <div className="chart-card full-width">
                     <h3>Ocorrências por Setor</h3>
                     <div className="chart-wrapper">
@@ -238,7 +268,6 @@ const Dashboard = () => {
                                    <XAxis dataKey="name" fontSize={11} tickLine={false} axisLine={false} />
                                    <YAxis allowDecimals={false} axisLine={false} tickLine={false} />
                                    <Tooltip cursor={{ fill: '#f7fafc' }} />
-                                   {/* Barra Verde Teal (#00b894) */}
                                    <Bar dataKey="quantidade" fill="#00b894" radius={[4, 4, 0, 0]} barSize={50} />
                               </BarChart>
                          </ResponsiveContainer>
@@ -251,7 +280,7 @@ const Dashboard = () => {
                     <div className="reports-grid">
                          <ReportButton icon={FileBarChart} label="Relatório Status" onClick={() => gerarRelatorioPDF('Status')} />
                          <ReportButton icon={Folder} label="Relatório Categorias" onClick={() => gerarRelatorioPDF('Categoria')} />
-                         <ReportButton icon={Map} label="Relatório Setores" onClick={() => gerarRelatorioPDF('Setor')} />
+                         <ReportButton icon={MapIcon} label="Relatório Setores" onClick={() => gerarRelatorioPDF('Setor')} />
                     </div>
                </div>
 

@@ -129,6 +129,19 @@
      font-weight: 500;
 }
 
+.date-filter-group {
+     display: flex;
+     align-items: center;
+     gap: 10px;
+     grid-column: span 2;
+     /* Faz ocupar 2 colunas se tiver espaço */
+}
+
+.date-separator {
+     color: #718096;
+     font-size: 0.9rem;
+}
+
 .meta-item.date {
      margin-left: auto;
      /* Empurra a data para a direita */
@@ -157,6 +170,11 @@
      .filters-grid {
           flex-direction: column;
           gap: 1rem;
+     }
+
+     .date-filter-group {
+          grid-column: span 1;
+          width: 100%;
      }
 
      .search-col,

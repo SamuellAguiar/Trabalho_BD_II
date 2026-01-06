@@ -14,6 +14,7 @@ import LoginAdmin from '../pages/admin/LoginAdmin';
 import Dashboard from '../pages/admin/Dashboard';
 import GerenciarGenerico from '../pages/admin/GerenciarGenerico';
 import GerenciarOcorrencias from '../pages/admin/GerenciarOcorrencias';
+import DetalhesOcorrencia from '../pages/public/DetalhesOcorrencia';
 
 // --- COMPONENTE DE ROTA PROTEGIDA ---
 const PrivateRoute = ({ children }) => {
@@ -32,6 +33,7 @@ const AppRoutes = () => {
                     <Route index element={<Home />} />
                     <Route path="nova" element={<NovaOcorrencia />} />
                     <Route path="lista" element={<Listagem />} />
+                    <Route path="ocorrencia/:id" element={<DetalhesOcorrencia />} />
                </Route>
 
                {/* ROTA DE LOGIN (Fora dos Layouts) */}

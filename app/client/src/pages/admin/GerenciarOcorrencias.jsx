@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
-import { Trash2, Search, Save, X, Plus } from 'lucide-react';
+import { Trash2, Save, X, Plus, ImageOff } from 'lucide-react'; // Adicionei ImageOff
 import { useNavigate } from 'react-router-dom';
-import api from '../../services/api';
-import './GerenciarGenerico.css'; // Reusa o mesmo CSS!
+import api, { getImageUrl } from '../../services/api'; // Importe getImageUrl
+import './GerenciarGenerico.css';
 import Badge from '../../components/ui/Badge';
 import Button from '../../components/ui/Button';
+import { toast } from 'react-toastify';
 
 const GerenciarOcorrencias = () => {
      const navigate = useNavigate();
@@ -15,13 +16,48 @@ const GerenciarOcorrencias = () => {
      const [editandoId, setEditandoId] = useState(null);
      const [novoStatus, setNovoStatus] = useState('');
 
+     const confirmToast = (mensagem) => new Promise((resolve) => {
+          const toastId = toast.info(({ closeToast }) => (
+               <div className="toast-confirm">
+                    <p>{mensagem}</p>
+                    <div className="toast-confirm__actions">
+                         <button
+                              className="toast-btn toast-btn-danger"
+                              onClick={() => {
+                                   resolve(true);
+                                   toast.dismiss(toastId);
+                                   closeToast();
+                              }}
+                         >
+                              Remover
+                         </button>
+                         <button
+                              className="toast-btn"
+                              onClick={() => {
+                                   resolve(false);
+                                   toast.dismiss(toastId);
+                                   closeToast();
+                              }}
+                         >
+                              Cancelar
+                         </button>
+                    </div>
+               </div>
+          ), {
+               autoClose: false,
+               closeOnClick: false,
+               draggable: false,
+          });
+     });
+
      const carregarDados = async () => {
           setLoading(true);
           try {
-               const response = await api.get('/ocorrencias'); // Traz todas
+               const response = await api.get('/ocorrencias');
                setOcorrencias(response.data);
           } catch (error) {
                console.error("Erro ao carregar:", error);
+               toast.error("Erro ao carregar ocorrências.");
           } finally {
                setLoading(false);
           }
@@ -32,12 +68,14 @@ const GerenciarOcorrencias = () => {
      }, []);
 
      const handleExcluir = async (id) => {
-          if (!confirm('Tem certeza que deseja apagar esta ocorrência? Isso é irreversível.')) return;
+          const confirmado = await confirmToast("Deseja excluir esta ocorrência? Isso é irreversível.");
+          if (!confirmado) return;
           try {
                await api.delete(`/ocorrencias/${id}`);
                carregarDados();
+               toast.success("Ocorrência excluída.");
           } catch (error) {
-               alert('Erro ao excluir.');
+               toast.error('Erro ao excluir.');
           }
      };
 
@@ -48,12 +86,27 @@ const GerenciarOcorrencias = () => {
 
      const handleSalvarStatus = async () => {
           try {
-               // Chama a rota PATCH que criamos no backend
                await api.patch(`/ocorrencias/${editandoId}/status`, { status: novoStatus });
                setEditandoId(null);
                carregarDados();
+               toast.success("Status atualizado!");
           } catch (error) {
-               alert('Erro ao atualizar status.');
+               toast.error('Erro ao atualizar status.');
+          }
+     };
+
+     // --- NOVA FUNÇÃO: DELETAR FOTO ---
+     const handleDeletarFoto = async (idOcorrencia, nomeArquivo) => {
+          const confirmado = await confirmToast("Deseja remover esta imagem?");
+          if (!confirmado) return;
+          try {
+               // Envia apenas o nome do arquivo para a rota de delete
+               await api.delete(`/ocorrencias/${idOcorrencia}/fotos/${nomeArquivo}`);
+               toast.success("Imagem removida.");
+               carregarDados();
+          } catch (error) {
+               console.error(error);
+               toast.error("Erro ao remover imagem.");
           }
      };
 
@@ -64,7 +117,6 @@ const GerenciarOcorrencias = () => {
                          <h1>Gerenciar Ocorrências</h1>
                          <p>Monitore, atualize status ou remova registros</p>
                     </div>
-                    {/* Botão para Adicionar Nova (Redireciona para o form público) */}
                     <Button onClick={() => navigate('/nova')} variant="solid">
                          <Plus size={18} style={{ marginRight: 8 }} /> Nova Ocorrência
                     </Button>
@@ -81,10 +133,37 @@ const GerenciarOcorrencias = () => {
                                         <span className="meta-tag">{item.nome_categoria}</span>
                                         <span className="meta-date">{new Date(item.data_hora).toLocaleDateString()}</span>
                                    </div>
+
+                                   {/* --- ÁREA DE FOTOS (NOVO) --- */}
+                                   {item.anexos && item.anexos.length > 0 && (
+                                        <div className="admin-photos-row">
+                                             {item.anexos.map((anexo, idx) => {
+                                                  const nomeArquivo = anexo.caminho_arquivo.split('/').pop();
+                                                  return (
+                                                       <div key={idx} className="admin-thumb-wrapper">
+                                                            <a href={getImageUrl(anexo.caminho_arquivo)} target="_blank" rel="noreferrer">
+                                                                 <img
+                                                                      src={getImageUrl(anexo.caminho_arquivo)}
+                                                                      alt="Evidência"
+                                                                      className="admin-thumb"
+                                                                      onError={(e) => e.target.style.display = 'none'} // Esconde se der erro
+                                                                 />
+                                                            </a>
+                                                            <button
+                                                                 className="btn-delete-photo"
+                                                                 onClick={() => handleDeletarFoto(item._id, nomeArquivo)}
+                                                                 title="Remover foto imprópria"
+                                                            >
+                                                                 <ImageOff size={12} />
+                                                            </button>
+                                                       </div>
+                                                  );
+                                             })}
+                                        </div>
+                                   )}
                               </div>
 
                               <div className="occurrence-actions">
-                                   {/* Se estiver editando, mostra Select. Se não, mostra Badge */}
                                    {editandoId === item._id ? (
                                         <div className="status-edit-group">
                                              <select
