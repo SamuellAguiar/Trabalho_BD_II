@@ -43,7 +43,6 @@ O sistema permite o registro de diversos tipos de incidentes, como:
 - **Anexos**: Adicionar fotos e evidências às ocorrências
 - **Localização**: Registrar local aproximado do incidente
 - **Consulta**: Filtrar ocorrências por período, categoria ou palavras-chave
-- **Visualização**: Acompanhar estatísticas gerais de segurança
 
 ### Para Administradores
 - **Acesso Protegido**: Login administrativo para gestão
