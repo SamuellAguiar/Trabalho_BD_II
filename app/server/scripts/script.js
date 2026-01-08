@@ -1,4 +1,3 @@
-// scripts/script.js
 require('dotenv').config();
 const { MongoClient } = require('mongodb');
 
@@ -10,24 +9,21 @@ async function script() {
           console.log("Conectado ao MongoDB...");
           const db = client.db(process.env.DB_NAME);
 
-          // 1. LIMPEZA TOTAL (Reset)
+          // LIMPEZA TOTAL (Reset)
           console.log("Limpando banco de dados...");
           await db.collection('setores').deleteMany({});
           await db.collection('categorias').deleteMany({});
           await db.collection('ocorrencias').deleteMany({});
 
-          // 2. CRIAÇÃO DE ÍNDICES (Performance e Busca)
+          // CRIAÇÃO DE ÍNDICES (Performance e Busca)
           console.log("Criando índices...");
-          // Índice Geoespacial para buscar ocorrências próximas
           await db.collection('ocorrencias').createIndex({ localizacao_geo: "2dsphere" });
-          // Índices para acelerar o $lookup (JOIN)
           await db.collection('ocorrencias').createIndex({ Setor_REF: 1 });
           await db.collection('ocorrencias').createIndex({ Categoria_REF: 1 });
-          // Índice único para garantir que não existam setores/categorias com mesmo nome
           await db.collection('setores').createIndex({ nome: 1 }, { unique: true });
           await db.collection('categorias').createIndex({ nome: 1 }, { unique: true });
 
-          // 3. INSERIR SETORES
+          // INSERIR SETORES
           const setores = [
                { nome: "Estacionamento Principal" },
                { nome: "Biblioteca" },
@@ -45,7 +41,7 @@ async function script() {
           const idSetores = Object.values(resSetores.insertedIds);
           console.log(`${resSetores.insertedCount} Setores inseridos.`);
 
-          // 4. INSERIR CATEGORIAS
+          // INSERIR CATEGORIAS
           const categorias = [
                { nome: "Iluminação / Elétrica" },
                { nome: "Limpeza e Conservação" },
@@ -57,7 +53,7 @@ async function script() {
           const idCategorias = Object.values(resCategorias.insertedIds);
           console.log(`${resCategorias.insertedCount} Categorias inseridas.`);
 
-          // 5. INSERIR OCORRÊNCIAS DE TESTE
+          // INSERIR OCORRÊNCIAS DE TESTE
           const ocorrencias = [
                {
                     descricao: "Poste de luz piscando intermitentemente, risco de queimar.",
@@ -91,7 +87,7 @@ async function script() {
           await db.collection('ocorrencias').insertMany(ocorrencias);
           console.log(`${ocorrencias.length} Ocorrências inseridas.`);
 
-          // 6. RELATÓRIO DE IDs
+          // RELATÓRIO DE IDs
           console.log("\n=========================================");
           console.log(`SETOR ID (Estacionamento): ${idSetores[0]}`);
           console.log(`SETOR ID (Biblioteca):     ${idSetores[1]}`);
