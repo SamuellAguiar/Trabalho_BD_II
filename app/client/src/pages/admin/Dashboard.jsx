@@ -187,12 +187,11 @@ const Dashboard = () => {
                          break;
 
                     case 'Pendências':
-                         colunas = [['Prioridade', 'Descrição', 'Setor', 'Aberto em']];
+                         colunas = [['Descrição', 'Setor', 'Aberto em']];
                          dadosFormatados = dadosFiltrados
                               .filter(i => i.status !== 'RESOLVIDO') // Só o que não está resolvido
                               .sort((a, b) => new Date(a.data_hora) - new Date(b.data_hora)) // Mais antigo primeiro (urgente)
                               .map(item => [
-                                   item.status === 'PENDENTE' ? 'ALTA' : 'MÉDIA',
                                    item.descricao.substring(0, 40) + '...',
                                    item.nome_setor || 'N/A',
                                    new Date(item.data_hora).toLocaleDateString()
