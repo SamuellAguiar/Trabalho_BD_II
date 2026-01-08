@@ -277,7 +277,7 @@ const Dashboard = () => {
 
                {/* Gráfico Temporal */}
                <div className="chart-card full-width">
-                    <h3>📈 Evolução Temporal (Últimos Registros)</h3>
+                    <h3> Evolução Temporal (Últimos Registros)</h3>
                     <div className="chart-wrapper">
                          <ResponsiveContainer width="100%" height={300}>
                               <LineChart data={graficoLinha}>
@@ -327,7 +327,7 @@ const Dashboard = () => {
                {/* Mapa de Calor */}
                <div className="chart-card full-width" style={{ padding: 0, overflow: 'hidden' }}>
                     <div style={{ padding: '1.5rem 1.5rem 0 1.5rem' }}>
-                         <h3>🔥 Mapa de Calor (Zonas Críticas)</h3>
+                         <h3> Mapa de Calor (Zonas Críticas)</h3>
                     </div>
                     <div style={{ height: '400px', width: '100%', position: 'relative' }}>
                          {/* AJUSTE AQUI AS COORDENADAS DO SEU CAMPUS */}
@@ -340,7 +340,7 @@ const Dashboard = () => {
 
                {/* Seção de Relatórios (Expandida) */}
                <div className="reports-section">
-                    <h3>📥 Central de Relatórios</h3>
+                    <h3> Central de Relatórios</h3>
                     <div className="reports-grid">
 
                          {/* Relatório 1: Por Zonas (O que você pediu) */}
