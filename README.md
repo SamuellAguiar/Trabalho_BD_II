@@ -99,13 +99,16 @@ Mapeamento Conceitual-Lógico do sistema utilizando a abordagem de projeto lógi
 ### Ferramentas de Desenvolvimento
 [![Git](https://img.shields.io/badge/Git-F05032?logo=git&logoColor=white)](#)
 
+### Build
+[![Vercel](https://img.shields.io/badge/Vercel-%23000000.svg?logo=vercel&logoColor=white)](#)
+[![Render](https://img.shields.io/badge/Render-%23000000.svg?logo=render&logoColor=white)](#)
+
 ## Como Executar
 
 ### Pré-requisitos
 
 Antes de começar, você precisará ter instalado:
 - [Node.js](https://nodejs.org/) (versão 14 ou superior)
-- [MongoDB](https://www.mongodb.com/) (ou acesso a uma instância MongoDB)
 
 ### Clonando o Repositório
 
