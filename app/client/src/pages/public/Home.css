@@ -1,189 +1,399 @@
 /* src/pages/public/Home.css */
 
-/* --- Configurações Gerais da Página --- */
-.home-wrapper {
+/* Utilitários de Flexbox para este arquivo */
+.center-flex {
      display: flex;
-     flex-direction: column;
-     /* AUMENTEI O ESPAÇAMENTO GERAL AQUI DE 4rem PARA 6rem */
-     gap: 6rem;
-     padding-bottom: 5rem;
-     width: 100%;
-}
-
-.centered-content {
-     max-width: 1200px;
-     margin: 0 auto;
-     width: 100%;
-     padding: 0 1.5rem;
-     /* Garante que não encoste na borda em telas menores */
-}
-
-/* Utilitários de Grid */
-.grid-4 {
-     display: grid;
-     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-     gap: 2rem;
-}
-
-.grid-3 {
-     display: grid;
-     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-     gap: 2rem;
-}
-
-/* --- SEÇÃO HERO --- */
-.hero-section {
-     text-align: center;
-     padding-top: 4rem;
-     /* Mais espaço no topo */
-     padding-bottom: 2rem;
-}
-
-.hero-title {
-     font-size: 3rem;
-     /* Aumentei um pouco */
-     color: #1a202c;
-     margin-bottom: 1.5rem;
-     font-weight: 800;
-     line-height: 1.2;
-}
-
-.hero-subtitle {
-     font-size: 1.15rem;
-     color: #4a5568;
-     max-width: 700px;
-     margin: 0 auto 3rem auto;
-     line-height: 1.6;
-}
-
-.hero-buttons {
-     display: flex;
-     gap: 1.5rem;
      justify-content: center;
+     align-items: center;
 }
 
-/* --- SEÇÃO FEATURES (Cards Brancos) --- */
-.features-grid {
-     /* Adicionei margem extra embaixo para separar do "Como Funciona" */
-     margin-bottom: 2rem;
+.flex-align {
+     display: flex;
+     align-items: center;
 }
 
-/* --- SEÇÃO COMO FUNCIONA --- */
-/* Títulos das Seções */
-.section-title {
-     text-align: center;
-     font-size: 2rem;
-     color: #2d3748;
-     margin-bottom: 3rem;
-     font-weight: 700;
-}
-
-.big-white-card {
-     background: white;
-     padding: 4rem 3rem;
-     /* Mais espaçamento interno */
-     border-radius: 24px;
-     /* Bordas mais arredondadas */
-     box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
-}
-
-.step-item {
-     text-align: center;
-     padding: 1rem;
+/* --- HERO SECTION (Centralizado e Compacto) --- */
+.hero-section {
+     /* Fundo escuro moderno */
+     background: #1a202c;
+     color: white;
+     min-height: 85vh;
+     /* Um pouco menor que a tela cheia para ver que tem mais conteúdo */
      display: flex;
      flex-direction: column;
+     justify-content: center;
+     /* Centraliza Verticalmente */
      align-items: center;
+     /* Centraliza Horizontalmente */
+     position: relative;
+     padding: 2rem 1rem 6rem 1rem;
+     /* Padding inferior maior para a onda */
+     overflow: hidden;
+}
+
+/* Efeito de luz centralizado atrás do texto */
+.hero-bg-glow {
+     position: absolute;
+     top: 50%;
+     left: 50%;
+     transform: translate(-50%, -50%);
+     width: 60vw;
+     height: 60vw;
+     background: radial-gradient(circle, rgba(108, 99, 255, 0.15) 0%, rgba(0, 0, 0, 0) 60%);
+     pointer-events: none;
+}
+
+/* Container do conteúdo de texto */
+.hero-content-centered {
+     text-align: center;
+     max-width: 750px;
+     /* Limita a largura para não ficar muito esticado */
+     z-index: 2;
+}
+
+/* Badge (Insignia) no topo */
+.hero-badge {
+     background: rgba(108, 99, 255, 0.1);
+     color: #b3b0ff;
+     padding: 4px 14px;
+     border-radius: 20px;
+     font-size: 0.8rem;
+     font-weight: 700;
+     text-transform: uppercase;
+     letter-spacing: 1.5px;
+     /* ESPAÇAMENTO REDUZIDO */
+     margin-bottom: 1rem;
+     display: inline-block;
+     border: 1px solid rgba(108, 99, 255, 0.25);
+}
+
+/* Título Principal */
+.hero-title {
+     font-size: 3.5rem;
+     /* ESPAÇAMENTO E ALTURA DE LINHA REDUZIDOS */
+     line-height: 1.05;
+     font-weight: 800;
+     margin-bottom: 1rem;
+     letter-spacing: -1px;
+}
+
+/* Gradiente no texto */
+.text-gradient {
+     background: linear-gradient(to right, #6c63ff, #00b894);
+     -webkit-background-clip: text;
+     -webkit-text-fill-color: transparent;
+}
+
+/* Subtítulo */
+.hero-subtitle {
+     font-size: 1.2rem;
+     color: #a0aec0;
+     /* ESPAÇAMENTO E ALTURA DE LINHA REDUZIDOS */
+     margin-bottom: 1.5rem;
+     line-height: 1.4;
+     max-width: 600px;
+     margin-left: auto;
+     margin-right: auto;
+     /* Garante centralização do bloco */
+}
+
+/* Botões */
+.hero-buttons {
+     gap: 1rem;
+     margin-bottom: 2rem;
+     /* Espaço reduzido antes dos stats */
+}
+
+.btn-hero-primary {
+     padding: 14px 32px;
+     font-size: 1rem;
+     box-shadow: 0 8px 20px rgba(108, 99, 255, 0.25);
+}
+
+.btn-hero-secondary {
+     background: rgba(255, 255, 255, 0.05);
+     border: 1px solid rgba(255, 255, 255, 0.15);
+     color: white;
+     padding: 14px 32px;
+     font-size: 1rem;
+}
+
+.btn-hero-secondary:hover {
+     background: rgba(255, 255, 255, 0.1);
+     border-color: white;
+}
+
+/* Mini Stats Centralizados */
+.hero-mini-stats {
+     gap: 1.5rem;
+     padding: 1rem 1.5rem;
+     background: rgba(255, 255, 255, 0.03);
+     border-radius: 50px;
+     border: 1px solid rgba(255, 255, 255, 0.08);
+     display: inline-flex;
+     /* Faz o container abraçar o conteúdo */
+}
+
+.mini-stat strong {
+     font-size: 1.2rem;
+     margin-right: 6px;
+     color: white;
+}
+
+.mini-stat span,
+.mini-stat div {
+     font-size: 0.9rem;
+     color: #a0aec0;
+     font-weight: 500;
+}
+
+.divider {
+     width: 1px;
+     height: 20px;
+     background: rgba(255, 255, 255, 0.1);
+}
+
+/* Onda SVG no rodapé do Hero */
+.hero-wave {
+     position: absolute;
+     bottom: 0;
+     left: 0;
+     width: 100%;
+     line-height: 0;
+     z-index: 1;
+}
+
+.hero-wave svg {
+     width: 100%;
+     height: auto;
+}
+
+/* --- As outras seções (Steps, Features, CTA) mantêm o CSS anterior --- */
+/* (Copie e cole o restante do CSS da resposta anterior aqui, a partir de .steps-section) */
+.steps-section {
+     padding: 6rem 1rem;
+     background-color: #fafafa;
+}
+
+.section-header {
+     text-align: center;
+     margin-bottom: 4rem;
+}
+
+.section-tag {
+     color: #6c63ff;
+     font-weight: 700;
+     text-transform: uppercase;
+     letter-spacing: 1px;
+     font-size: 0.9rem;
+}
+
+.section-header h2 {
+     font-size: 2.5rem;
+     color: #1a202c;
+     margin: 0.5rem 0 1rem 0;
+}
+
+.section-header p {
+     color: #718096;
+     font-size: 1.1rem;
+}
+
+.steps-grid {
+     display: grid;
+     grid-template-columns: repeat(3, 1fr);
+     gap: 2rem;
+}
+
+.step-card {
+     background: white;
+     padding: 2.5rem;
+     border-radius: 20px;
+     position: relative;
+     transition: transform 0.3s;
+     border: 1px solid #f0f0f0;
+}
+
+.step-card:hover {
+     transform: translateY(-10px);
+     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.05);
 }
 
 .step-number {
-     background-color: #f3f0ff;
-     /* Roxo bem suave */
-     color: #6c63ff;
+     position: absolute;
+     top: 20px;
+     right: 20px;
+     font-size: 4rem;
+     font-weight: 900;
+     color: #f3f3f3;
+     z-index: 0;
+}
+
+.step-icon {
      width: 60px;
-     /* Um pouco maior */
      height: 60px;
-     border-radius: 50%;
+     background: #f3f0ff;
+     border-radius: 16px;
      display: flex;
      align-items: center;
      justify-content: center;
-     font-size: 1.5rem;
-     font-weight: 800;
      margin-bottom: 1.5rem;
-     box-shadow: 0 4px 6px rgba(108, 99, 255, 0.1);
+     position: relative;
+     z-index: 1;
 }
 
-.step-item h3 {
+.step-card h3 {
+     font-size: 1.3rem;
      margin-bottom: 1rem;
      color: #2d3748;
-     font-size: 1.25rem;
+     position: relative;
+     z-index: 1;
 }
 
-.step-item p {
+.step-card p {
      color: #718096;
-     font-size: 1rem;
      line-height: 1.6;
+     position: relative;
+     z-index: 1;
 }
 
-/* --- SEÇÃO ESTATÍSTICAS --- */
-.stats-grid {
+/* --- SEÇÃO FEATURES BOX --- */
+.features-section {
+     padding: 4rem 1rem;
+}
+
+.features-container-box {
+     background: white;
+     border-radius: 24px;
+     padding: 4rem;
+     display: grid;
+     grid-template-columns: 1fr 1fr;
+     gap: 4rem;
+     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.05);
+     border: 1px solid #edf2f7;
+     align-items: center;
+}
+
+.features-text h2 {
+     font-size: 2.2rem;
+     margin-bottom: 1.5rem;
+     color: #1a202c;
+}
+
+.features-text p {
+     font-size: 1.1rem;
+     color: #718096;
+     margin-bottom: 2rem;
+}
+
+.features-grid-tight {
+     display: grid;
+     grid-template-columns: 1fr 1fr;
+     gap: 2rem;
+}
+
+.feat-item {
+     background: #fcfcfc;
+     padding: 1.5rem;
+     border-radius: 12px;
+     border: 1px solid #f0f0f0;
+     text-align: center;
+     transition: all 0.2s;
+}
+
+.feat-item:hover {
+     border-color: #6c63ff;
+     transform: scale(1.05);
+}
+
+.feat-item strong {
+     display: block;
      margin-top: 1rem;
+     color: #2d3748;
 }
 
-/* Responsividade */
-@media (max-width: 768px) {
-     .hero-title {
-          font-size: 2.2rem;
-     }
-
-     .hero-buttons {
-          flex-direction: column;
-     }
-
-     .big-white-card {
-          padding: 2rem 1.5rem;
-     }
-
-     .home-wrapper {
-          gap: 4rem;
-     }
-
-     /* Diminui um pouco o gap no mobile */
+.feat-item p {
+     font-size: 0.9rem;
+     color: #a0aec0;
+     margin-top: 0.5rem;
 }
 
-/* --- RESPONSIVIDADE --- */
-@media (max-width: 768px) {
-     .hero-title {
-          font-size: 2rem;
+/* --- CTA FINAL --- */
+.cta-section {
+     padding: 6rem 1rem;
+     text-align: center;
+     background: linear-gradient(135deg, #6c63ff 0%, #5a52d5 100%);
+     color: white;
+}
+
+.cta-content h2 {
+     font-size: 2.5rem;
+     margin-bottom: 1rem;
+}
+
+.cta-content p {
+     font-size: 1.2rem;
+     margin-bottom: 2.5rem;
+     opacity: 0.9;
+}
+
+.btn-cta-big {
+     background: white;
+     color: #6c63ff;
+     padding: 18px 40px;
+     font-size: 1.1rem;
+     border: none;
+     font-weight: 700;
+}
+
+.btn-cta-big:hover {
+     background: #f0f0f0;
+     transform: translateY(-3px);
+}
+
+/* RESPONSIVIDADE */
+@media (max-width: 900px) {
+     .hero-section {
+          min-height: auto;
+          padding-top: 4rem;
+          padding-bottom: 6rem;
      }
 
-     .hero-subtitle {
-          font-size: 1rem;
+     .hero-title {
+          font-size: 2.8rem;
      }
 
      .hero-buttons {
           flex-direction: column;
           width: 100%;
+          max-width: 300px;
+          margin: 0 auto 2rem auto;
      }
 
-     .hero-buttons .btn-purple {
+     .btn-hero-primary,
+     .btn-hero-secondary {
           width: 100%;
-          display: block;
-          text-align: center;
      }
 
-     /* Transforma os Grids em coluna única */
-     .grid-4,
-     .grid-3 {
+     .hero-mini-stats {
+          flex-direction: column;
+          gap: 0.5rem;
+          padding: 1rem;
+          border-radius: 20px;
+          width: 100%;
+          max-width: 300px;
+     }
+
+     .divider {
+          display: none;
+     }
+
+     .features-container-box {
           grid-template-columns: 1fr;
-          /* Uma coluna só */
+          padding: 2rem;
      }
 
-     .big-white-card {
-          padding: 2rem 1.5rem;
-     }
-
-     .home-wrapper {
-          gap: 3rem;
-          /* Menos espaço entre seções no celular */
+     .steps-grid {
+          grid-template-columns: 1fr;
      }
 }
