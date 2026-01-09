@@ -114,6 +114,7 @@ Antes de começar, você precisará ter instalado:
 
 ```bash
 git clone https://github.com/SamuellAguiar/Trabalho_BD_II.git
+
 cd Trabalho_BD_II
 ```
 
@@ -125,6 +126,7 @@ cd app/server
 npm install
 
 # Configure as variáveis de ambiente
+
 # Crie um arquivo .env com as configurações do MongoDB
 
 node server.js
@@ -143,6 +145,7 @@ npm run dev
 ### Acessando a Aplicação
 
 Após iniciar o servidor e o cliente, acesse:
+
 - **Frontend**: `http://localhost:5173`
 
 - **Backend API**: `http://localhost:3000`
