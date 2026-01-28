@@ -1,29 +1,42 @@
 # Sentinel - Sistema de Registro Anônimo de Ocorrências
 
 <p align="center">
-   <img src="http://img.shields.io/static/v1?label=STATUS&message=EM%20DESENVOLVIMENTO&color=RED&style=for-the-badge" #vitrinedev/>
+    <img src="https://img.shields.io/static/v1?label=STATUS&message=EM%20DESENVOLVIMENTO&color=RED&style=for-the-badge" alt="Status: Em Desenvolvimento"/>
 </p>
 
 <p align="center">
-  <a href="#sobre-o-projeto">Sobre</a> •
-  <a href="#funcionalidades">Funcionalidades</a> •
-  <a href="#modelagem">Modelagem</a> •
-  <a href="#tecnologias">Tecnologias</a> •
-  <a href="#como-executar">Como Executar</a> •
-  <a href="#autores">Autores</a> •
-  <a href="#licença">Licença</a>
+  <a href="#sobre-o-projeto">
+    <img src="https://img.shields.io/badge/Sobre-000?style=for-the-badge&logo=readthedocs&logoColor=white" alt="Sobre o Projeto">
+  </a>
+  <a href="#funcionalidades">
+    <img src="https://img.shields.io/badge/Funcionalidades-000?style=for-the-badge&logo=google-tasks&logoColor=white" alt="Funcionalidades">
+  </a>
+  <a href="#modelagem">
+    <img src="https://img.shields.io/badge/Modelagem-000?style=for-the-badge&logo=diagrams.net&logoColor=white" alt="Modelagem">
+  </a>
+  <a href="#tecnologias">
+    <img src="https://img.shields.io/badge/Tecnologias-000?style=for-the-badge&logo=visual-studio-code&logoColor=white" alt="Tecnologias">
+  </a>
+  <a href="#como-executar">
+    <img src="https://img.shields.io/badge/Como_Executar-000?style=for-the-badge&logo=gnu-bash&logoColor=white" alt="Como Executar">
+  </a>
+  <a href="#autores">
+    <img src="https://img.shields.io/badge/Autores-000?style=for-the-badge&logo=github&logoColor=white" alt="Autores">
+  </a>
+  <a href="#licença">
+    <img src="https://img.shields.io/badge/Licença-000?style=for-the-badge&logo=open-source-initiative&logoColor=white" alt="Licença">
+  </a>
 </p>
 
 ## Sobre o Projeto
 
-O **Sentinel** é um sistema desenvolvido para fornecer um canal seguro, anônimo e acessível para que membros da comunidade universitária registrem relatos relacionados à segurança no campus. 
+O **Sentinel** é um sistema desenvolvido para fornecer um canal seguro, anônimo e acessível para que membros da comunidade universitária registrem relatos relacionados à segurança no campus.
 
 ### Objetivo
 
 Permitir à instituição:
 - Monitorar padrões de ocorrências
 - Identificar áreas críticas do campus
-- Melhorar a atuação preventiva
 - Proporcionar ambiente mais seguro para todos
 
 ### Tipos de Ocorrências
@@ -34,7 +47,7 @@ O sistema permite o registro de diversos tipos de incidentes, como:
 - Iluminação deficiente
 - Assédio
 - Problemas estruturais
-- Outras questões de segurança 
+- Outras questões de segurança
 
 ## Funcionalidades
 
@@ -98,8 +111,10 @@ Mapeamento Conceitual-Lógico do sistema utilizando a abordagem de projeto lógi
 
 ### Ferramentas de Desenvolvimento
 [![Git](https://img.shields.io/badge/Git-F05032?logo=git&logoColor=white)](#)
+[![GitHub](https://img.shields.io/badge/GitHub-%23000000?logo=github&logoColor=white)](#)
 
-### Build
+
+### Hospedagem
 [![Vercel](https://img.shields.io/badge/Vercel-%23000000.svg?logo=vercel&logoColor=white)](#)
 [![Render](https://img.shields.io/badge/Render-%23000000.svg?logo=render&logoColor=white)](#)
 
@@ -113,7 +128,7 @@ Antes de começar, você precisará ter instalado:
 ### Clonando o Repositório
 
 ```bash
-git clone https://github.com/SamuellAguiar/Trabalho_BD_II.git
+git clone [https://github.com/SamuellAguiar/Trabalho_BD_II.git](https://github.com/SamuellAguiar/Trabalho_BD_II.git)
 
 cd Trabalho_BD_II
 ```
@@ -138,7 +153,7 @@ node server.js
 cd app/client
 
 npm install
- 
+
 npm run dev
 ```
 
@@ -148,7 +163,6 @@ Após iniciar o servidor e o cliente, acesse:
 
 - **Frontend**: `http://localhost:5173`
 
-- **Backend API**: `http://localhost:3000`
 
 ## Estrutura do Projeto
 
@@ -181,8 +195,6 @@ Trabalho_BD_II/
 ├── assets/              # Imagens e recursos
 └── README.md
 ```
-
-
 ## Autores
 
 <table>
@@ -217,4 +229,5 @@ Trabalho_BD_II/
 ## Licença
 
 Este projeto foi desenvolvido como trabalho acadêmico para a disciplina de Banco de Dados II.
+
 
