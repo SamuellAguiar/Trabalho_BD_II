@@ -1,82 +1,106 @@
-const OcorrenciaRepository = require('../repositories/OcorrenciaRepository');
 const { ObjectId } = require('mongodb');
-const { createPoint } = require('../utils/geoJsonHelper');
+
+// Função auxiliar para criar GeoJSON
+const createPoint = (lat, lng) => {
+     const longitude = parseFloat(lng);
+     const latitude = parseFloat(lat);
+
+     if (isNaN(longitude) || isNaN(latitude)) {
+          return null;
+     }
+
+     return {
+          type: 'Point',
+          coordinates: [longitude, latitude]
+     };
+};
 
 class OcorrenciaService {
      constructor(db) {
-          this.ocorrenciaRepository = new OcorrenciaRepository(db);
-          this.db = db;
+          this.collection = db.collection('ocorrencias');
+          this.setoresCollection = db.collection('setores');
+          this.categoriasCollection = db.collection('categorias');
      }
 
-     async registrarNovaOcorrencia(dados, arquivos) {
-          const idSetor = new ObjectId(dados.setorId);
-          const idCategoria = new ObjectId(dados.categoriaId);
+     // --- CRIAR OCORRÊNCIA ---
+     async criar(dados) {
+          // 1. Validação de Setor e Categoria
+          if (dados.setorId && dados.categoriaId) {
+               const idSetor = new ObjectId(dados.setorId);
+               const idCategoria = new ObjectId(dados.categoriaId);
 
-          const setorExiste = await this.db.collection('setores').findOne({ _id: idSetor });
-          const categoriaExiste = await this.db.collection('categorias').findOne({ _id: idCategoria });
+               const setorExiste = await this.setoresCollection.findOne({ _id: idSetor });
+               const categoriaExiste = await this.categoriasCollection.findOne({ _id: idCategoria });
 
-          if (!setorExiste) throw new Error("Setor não encontrado.");
-          if (!categoriaExiste) throw new Error("Categoria não encontrada.");
+               if (!setorExiste) throw new Error("Setor não encontrado.");
+               if (!categoriaExiste) throw new Error("Categoria não encontrada.");
 
-          const listaAnexos = arquivos ? arquivos.map(file => ({
-               caminho_arquivo: `/uploads/${file.filename}`,
-               tipo: file.mimetype,
-               nome_original: file.originalname
-          })) : [];
+               dados.Setor_REF = idSetor;
+               dados.Categoria_REF = idCategoria;
 
-          const novaOcorrencia = {
-               descricao: dados.descricao,
-               data_hora: new Date(),
-               status: 'PENDENTE',
-               Setor_REF: idSetor,
-               Categoria_REF: idCategoria,
-               localizacao_geo: createPoint(dados.lat, dados.lng),
-               anexos: listaAnexos
+               delete dados.setorId;
+               delete dados.categoriaId;
+          }
+
+          // 2. Tratamento da Localização (GeoJSON)
+          if (dados.lat && dados.lng) {
+               const geoPoint = createPoint(dados.lat, dados.lng);
+               if (geoPoint) {
+                    dados.localizacao_geo = geoPoint;
+               }
+               delete dados.lat;
+               delete dados.lng;
+          }
+
+          // 3. DATAS (Alteração Principal)
+          // data_criacao: Data exata que entrou no sistema (Para o Admin/Auditoria)
+          dados.data_criacao = new Date();
+
+          // data_ocorrencia: Data que o usuário diz que aconteceu (Para exibir publicamente)
+          if (dados.data_ocorrencia) {
+               dados.data_ocorrencia = new Date(dados.data_ocorrencia);
+          }
+
+          // Inserir no Banco
+          const resultado = await this.collection.insertOne(dados);
+
+          return {
+               _id: resultado.insertedId,
+               ...dados
           };
-
-          return await this.ocorrenciaRepository.create(novaOcorrencia);
      }
 
-     // --- CORREÇÃO PRINCIPAL AQUI ---
+     // --- LISTAR OCORRÊNCIAS ---
      async listarOcorrencias(filtros = {}) {
           const matchStage = {};
 
-          // 1. Filtro de Busca Textual
+          // Filtros
           if (filtros.busca) {
-               matchStage.$or = [
-                    { descricao: { $regex: filtros.busca, $options: 'i' } }
-                    // Nota: Filtrar por nome de setor/categoria exige lookup antes do match,
-                    // mas para simplificar e não pesar, vamos filtrar pela descrição aqui.
-               ];
+               matchStage.descricao = { $regex: filtros.busca, $options: 'i' };
           }
-
-          // 2. Filtros de ID (Só aplica se tiver valor real, evita erro de string vazia)
           if (filtros.status) matchStage.status = filtros.status;
 
-          if (filtros.categoriaId && filtros.categoriaId.length === 24) {
+          if (filtros.categoriaId && ObjectId.isValid(filtros.categoriaId)) {
                matchStage.Categoria_REF = new ObjectId(filtros.categoriaId);
           }
 
-          if (filtros.setorId && filtros.setorId.length === 24) {
+          if (filtros.setorId && ObjectId.isValid(filtros.setorId)) {
                matchStage.Setor_REF = new ObjectId(filtros.setorId);
           }
 
-          // 3. Filtro de Data (Novo)
+          // Filtro de Data (Geralmente filtramos pela data de criação do registro no sistema)
           if (filtros.dataInicio || filtros.dataFim) {
-               matchStage.data_hora = {};
+               matchStage.data_criacao = {};
                if (filtros.dataInicio) {
-                    // Adiciona o horário T00:00:00 para pegar o início do dia
-                    matchStage.data_hora.$gte = new Date(filtros.dataInicio + 'T00:00:00');
+                    matchStage.data_criacao.$gte = new Date(filtros.dataInicio + 'T00:00:00');
                }
                if (filtros.dataFim) {
-                    // Adiciona o horário T23:59:59 para pegar o final do dia
-                    matchStage.data_hora.$lte = new Date(filtros.dataFim + 'T23:59:59');
+                    matchStage.data_criacao.$lte = new Date(filtros.dataFim + 'T23:59:59');
                }
           }
 
-          // 4. Montar Pipeline com Joins ($lookup) para trazer os nomes
           const pipeline = [
-               { $match: matchStage }, // Aplica os filtros
+               { $match: matchStage },
                {
                     $lookup: {
                          from: 'setores',
@@ -93,65 +117,103 @@ class OcorrenciaService {
                          as: 'detalhes_categoria'
                     }
                },
-               // Projeta os campos finais para o Front-end
                {
                     $project: {
                          descricao: 1,
+                         data_criacao: 1,    // Data Sistema
+                         data_ocorrencia: 1, // Data Usuário (pode ser null)
+                         // Mantemos data_hora antiga se existir (para compatibilidade)
                          data_hora: 1,
                          status: 1,
                          localizacao_geo: 1,
                          anexos: 1,
                          nome_setor: { $arrayElemAt: ["$detalhes_setor.nome", 0] },
                          nome_categoria: { $arrayElemAt: ["$detalhes_categoria.nome", 0] },
-                         // Mantemos os IDs caso precise
                          Setor_REF: 1,
                          Categoria_REF: 1
                     }
                },
-               { $sort: { data_hora: -1 } } // Ordena do mais recente para o mais antigo
+               { $sort: { data_criacao: -1 } } // Ordena pelos mais recentes registrados
           ];
 
-          // Executa a agregação direta na coleção
-          return await this.db.collection('ocorrencias').aggregate(pipeline).toArray();
+          return await this.collection.aggregate(pipeline).toArray();
      }
 
      async buscarPorId(id) {
-          if (!ObjectId.isValid(id)) throw new Error("ID inválido.");
-          const ocorrencia = await this.ocorrenciaRepository.findById(id);
-          if (!ocorrencia) throw new Error("Ocorrência não encontrada.");
-          return ocorrencia;
+          if (!ObjectId.isValid(id)) throw new Error("ID inválido");
+
+          const pipeline = [
+               { $match: { _id: new ObjectId(id) } },
+               {
+                    $lookup: {
+                         from: 'setores',
+                         localField: 'Setor_REF',
+                         foreignField: '_id',
+                         as: 'detalhes_setor'
+                    }
+               },
+               {
+                    $lookup: {
+                         from: 'categorias',
+                         localField: 'Categoria_REF',
+                         foreignField: '_id',
+                         as: 'detalhes_categoria'
+                    }
+               },
+               {
+                    $project: {
+                         descricao: 1,
+                         data_criacao: 1,
+                         data_ocorrencia: 1,
+                         data_hora: 1,
+                         status: 1,
+                         localizacao_geo: 1,
+                         anexos: 1,
+                         nome_setor: { $arrayElemAt: ["$detalhes_setor.nome", 0] },
+                         nome_categoria: { $arrayElemAt: ["$detalhes_categoria.nome", 0] },
+                         Setor_REF: 1,
+                         Categoria_REF: 1
+                    }
+               }
+          ];
+
+          const resultado = await this.collection.aggregate(pipeline).toArray();
+
+          if (resultado.length === 0) throw new Error("Ocorrência não encontrada.");
+
+          return resultado[0];
      }
 
      async atualizarStatus(id, novoStatus) {
           if (!ObjectId.isValid(id)) throw new Error("ID inválido");
-          return await this.ocorrenciaRepository.updateStatus(id, novoStatus);
+
+          const resultado = await this.collection.updateOne(
+               { _id: new ObjectId(id) },
+               { $set: { status: novoStatus } }
+          );
+
+          if (resultado.matchedCount === 0) throw new Error("Ocorrência não encontrada");
+          return resultado;
      }
 
      async deletarOcorrencia(id) {
           if (!ObjectId.isValid(id)) throw new Error("ID inválido");
-          return await this.ocorrenciaRepository.delete(id);
+          const resultado = await this.collection.deleteOne({ _id: new ObjectId(id) });
+          if (resultado.deletedCount === 0) throw new Error("Ocorrência não encontrada");
+          return resultado;
      }
 
      async removerAnexo(id, nomeArquivo) {
-          // 1. Remove do Banco
-          // O front vai mandar só o nome do arquivo (ex: "foto-123.jpg"), 
-          // mas no banco está "/uploads/foto-123.jpg". Vamos ajustar:
-          const caminhoCompletoNoBanco = `/uploads/${nomeArquivo}`;
-
-          await this.ocorrenciaRepository.removeAnexo(id, caminhoCompletoNoBanco);
-
-          // 2. Remove do Disco (Sistema de Arquivos)
-          try {
-               const caminhoFisico = path.join(process.cwd(), 'uploads', nomeArquivo);
-               if (fs.existsSync(caminhoFisico)) {
-                    fs.unlinkSync(caminhoFisico);
+          if (!ObjectId.isValid(id)) throw new Error("ID inválido");
+          const resultado = await this.collection.updateOne(
+               { _id: new ObjectId(id) },
+               {
+                    $pull: {
+                         anexos: { caminho_arquivo: { $regex: nomeArquivo } }
+                    }
                }
-          } catch (error) {
-               console.error("Erro ao apagar arquivo físico:", error);
-               // Não lançamos erro aqui para não travar a resposta, pois já saiu do banco
-          }
-
-          return { mensagem: "Anexo removido com sucesso." };
+          );
+          return resultado;
      }
 }
 

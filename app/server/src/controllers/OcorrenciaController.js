@@ -3,21 +3,32 @@ const OcorrenciaService = require('../services/OcorrenciaService');
 const dbInstance = require('../config/database');
 
 class OcorrenciaController {
-     async registrar(req, res, next) {
+     async criar(req, res, next) {
           try {
                const db = dbInstance.getDb();
-               const ocorrenciaService = new OcorrenciaService(db);
+               const service = new OcorrenciaService(db);
 
-               // req.files contém os arquivos processados pelo Multer
-               // req.body contém os campos de texto
-               const resultado = await ocorrenciaService.registrarNovaOcorrencia(req.body, req.files);
+               // Monta o array de anexos pegando a URL que o Cloudinary devolveu
+               let anexos = [];
+               if (req.files && req.files.length > 0) {
+                    anexos = req.files.map(file => ({
+                         caminho_arquivo: file.path, // <--- AQUI ESTÁ O SEGREDO! O path agora é uma URL https://...
+                         tipo_arquivo: file.mimetype
+                    }));
+               }
 
-               return res.status(201).json({
-                    mensagem: "Ocorrência registrada com sucesso!",
-                    id: resultado.insertedId
-               });
+               const dadosOcorrencia = {
+                    ...req.body,
+                    anexos: anexos, // Salva o array com links do Cloudinary
+                    status: 'PENDENTE',
+                    data_hora: new Date()
+               };
+
+               const novaOcorrencia = await service.criar(dadosOcorrencia);
+               return res.status(201).json(novaOcorrencia);
+
           } catch (error) {
-               next(error); // Usa o middleware de erro
+               next(error);
           }
      }
 

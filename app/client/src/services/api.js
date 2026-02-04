@@ -23,13 +23,17 @@ api.interceptors.response.use(
 
 // Função auxiliar para montar URLs de imagem corretamente
 export const getImageUrl = (path) => {
-     if (!path) return null;
-     // Se o caminho já vier completo (http...), retorna ele
-     if (path.startsWith('http')) return path;
+     if (!path) return '';
 
-     // Senão, concatena com a URL do servidor
-     // import.meta.env.VITE_IMG_URL = http://localhost:3010
-     return `${import.meta.env.VITE_IMG_URL}${path}`;
+     // Se o caminho já começa com "http" (Cloudinary), retorna ele mesmo
+     if (path.startsWith('http')) {
+          return path;
+     }
+
+     // (Fallback) Se por acaso for uma imagem antiga local, mantém a lógica antiga
+     // Ajuste a URL base conforme seu ambiente (localhost ou render)
+     const BASE_URL = 'http://localhost:3010';
+     return `${BASE_URL}${path.startsWith('/') ? '' : '/'}${path}`;
 };
 
 export default api;

@@ -1,159 +1,257 @@
-/* src/pages/public/NovaOcorrencia.css */
-
+/* Fundo Geral */
 .nova-ocorrencia-wrapper {
-     padding-top: 3rem;
-     padding-bottom: 3rem;
+     background-color: #f8f9fa;
+     /* Cinza bem claro de fundo */
+     min-height: 100vh;
+     padding: 3rem 1rem;
      display: flex;
      justify-content: center;
+     align-items: flex-start;
 }
 
+/* Card Principal */
 .form-card {
      background: white;
      width: 100%;
      max-width: 800px;
-     /* Largura controlada */
-     padding: 3rem;
-     border-radius: 16px;
-     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+     padding: 2.5rem;
+     border-radius: 12px;
+     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+     /* Sombra suave */
+     border: 1px solid #eaeaea;
 }
 
+/* Cabeçalho */
 .form-header {
-     margin-bottom: 2.5rem;
-     border-bottom: 1px solid #edf2f7;
+     border-bottom: 1px solid #f0f0f0;
      padding-bottom: 1.5rem;
+     margin-bottom: 2rem;
 }
 
-.form-header h2 {
-     font-size: 1.8rem;
-     color: #1a202c;
+.form-header h1 {
+     font-size: 1.75rem;
+     color: #1f2937;
+     font-weight: 700;
      margin-bottom: 0.5rem;
 }
 
 .form-header p {
-     color: #718096;
+     color: #6b7280;
+     font-size: 0.95rem;
 }
 
-/* Layout de Linha (Grid) */
+/* Grupos de Formulário */
+.form-group {
+     margin-bottom: 1.5rem;
+}
+
+.form-group label {
+     display: block;
+     font-weight: 600;
+     color: #374151;
+     margin-bottom: 0.5rem;
+     font-size: 0.95rem;
+}
+
+.required {
+     color: #ef4444;
+}
+
+/* Inputs e Textareas */
+.form-group input[type="text"],
+.form-group select,
+.form-group textarea {
+     width: 100%;
+     padding: 12px 16px;
+     border: 1px solid #d1d5db;
+     border-radius: 8px;
+     font-size: 1rem;
+     color: #1f2937;
+     transition: border-color 0.2s, box-shadow 0.2s;
+     background-color: #fff;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+     outline: none;
+     border-color: #6c63ff;
+     box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.15);
+}
+
+.form-group textarea {
+     resize: vertical;
+     min-height: 120px;
+}
+
+/* Linha Lado a Lado (Grid) */
 .form-row {
      display: grid;
      grid-template-columns: 1fr 1fr;
-     gap: 2rem;
+     gap: 1.5rem;
 }
 
-/* Botão de Geolocalização */
-.btn-geo {
+@media (max-width: 640px) {
+     .form-row {
+          grid-template-columns: 1fr;
+          /* Empilha no mobile */
+          gap: 0;
+     }
+}
+
+/* --- ÁREA DE UPLOAD ESTILO DRAG & DROP --- */
+.upload-container input[type="file"] {
+     display: none;
+}
+
+.upload-box {
+     border: 2px dashed #d1d5db;
+     border-radius: 12px;
+     padding: 2.5rem;
+     background-color: #f9fafb;
      display: flex;
+     flex-direction: column;
      align-items: center;
-     gap: 0.5rem;
-     padding: 10px 20px;
-     border-radius: 8px;
-     font-weight: 600;
-     border: none;
+     justify-content: center;
      cursor: pointer;
      transition: all 0.2s;
-     width: fit-content;
+     text-align: center;
 }
 
-.btn-geo.idle,
-.btn-geo.error {
-     background-color: #00b894;
-     /* Verde do print */
-     color: white;
+.upload-box:hover {
+     background-color: #f3f4f6;
+     border-color: #6c63ff;
 }
 
-.btn-geo.success {
-     background-color: #e6fffa;
-     color: #00b894;
-     border: 1px solid #00b894;
+.upload-icon-circle {
+     background: #eef2ff;
+     padding: 12px;
+     border-radius: 50%;
+     margin-bottom: 12px;
 }
 
-.geo-info {
-     display: block;
-     margin-top: 0.5rem;
+.upload-box span {
+     color: #6b7280;
+     margin-bottom: 12px;
+     font-size: 0.9rem;
+}
+
+.btn-small-upload {
+     background: #e5e7eb;
+     border: none;
+     padding: 8px 16px;
+     border-radius: 6px;
+     font-weight: 600;
+     color: #374151;
+     cursor: pointer;
      font-size: 0.85rem;
-     color: #718096;
 }
 
-/* Botões de Ação (Footer do Form) */
+/* Previews das Imagens */
+.preview-row {
+     display: flex;
+     gap: 10px;
+     margin-top: 15px;
+     flex-wrap: wrap;
+}
+
+.preview-thumb {
+     width: 80px;
+     height: 80px;
+     border-radius: 8px;
+     overflow: hidden;
+     border: 1px solid #e5e7eb;
+}
+
+.preview-thumb img {
+     width: 100%;
+     height: 100%;
+     object-fit: cover;
+}
+
+/* --- MAPA --- */
+.map-frame {
+     border: 1px solid #d1d5db;
+     border-radius: 12px;
+     overflow: hidden;
+     position: relative;
+}
+
+.geo-status {
+     background: #f3f4f6;
+     padding: 8px 16px;
+     font-size: 0.85rem;
+     color: #6b7280;
+     display: flex;
+     align-items: center;
+     gap: 8px;
+     border-top: 1px solid #e5e7eb;
+}
+
+.geo-status.geo-ok {
+     background: #ecfdf5;
+     color: #059669;
+}
+
+/* --- BOTÕES DE AÇÃO --- */
 .form-actions {
      display: flex;
      gap: 1rem;
-     margin-top: 2rem;
-     padding-top: 2rem;
-     border-top: 1px solid #edf2f7;
+     margin-top: 2.5rem;
+     padding-top: 1.5rem;
+     border-top: 1px solid #f0f0f0;
 }
 
-/* Ajuste no nosso Button reutilizável para ficar largo */
-.form-actions .btn-purple {
+.btn-primary {
      flex: 2;
      /* Ocupa mais espaço */
+     background-color: #6c63ff;
+     /* Roxo */
+     color: white;
+     border: none;
+     padding: 14px;
+     border-radius: 8px;
+     font-size: 1rem;
+     font-weight: 600;
+     cursor: pointer;
+     transition: background 0.2s;
      display: flex;
      justify-content: center;
      align-items: center;
+     gap: 8px;
 }
 
-.btn-cancel {
+.btn-primary:hover {
+     background-color: #5a52d5;
+}
+
+.btn-secondary {
      flex: 1;
-     background-color: #e2e8f0;
-     color: #4a5568;
+     background-color: #e5e7eb;
+     /* Cinza */
+     color: #374151;
      border: none;
+     padding: 14px;
      border-radius: 8px;
+     font-size: 1rem;
      font-weight: 600;
      cursor: pointer;
      transition: background 0.2s;
 }
 
-.btn-cancel:hover {
-     background-color: #cbd5e0;
+.btn-secondary:hover {
+     background-color: #d1d5db;
 }
 
-/* Responsividade */
-@media (max-width: 640px) {
-     .form-row {
-          grid-template-columns: 1fr;
-          gap: 0;
-     }
-
-     .form-card {
-          padding: 1.5rem;
-     }
-}
-
-@media (max-width: 768px) {
-     .nova-ocorrencia-wrapper {
-          padding: 1rem;
-     }
-
-     .form-card {
-          padding: 1.5rem 1rem;
-          /* Menos padding lateral */
-     }
-
-     .form-header h2 {
-          font-size: 1.5rem;
-          text-align: center;
-     }
-
-     .form-row {
-          grid-template-columns: 1fr;
-          /* Empilha Categoria e Setor */
-          gap: 0;
-     }
-
-     .btn-geo {
-          width: 100%;
-          justify-content: center;
-          padding: 15px;
-          /* Botão mais alto para dedo */
-     }
-
-     .form-actions {
-          flex-direction: column-reverse;
-          gap: 1rem;
-     }
-
-     .form-actions button {
-          width: 100%;
-          padding: 15px;
-     }
+/* Erro */
+.error-banner {
+     background-color: #fef2f2;
+     color: #b91c1c;
+     padding: 12px;
+     border-radius: 8px;
+     margin-bottom: 20px;
+     display: flex;
+     align-items: center;
+     gap: 8px;
+     border: 1px solid #fecaca;
 }

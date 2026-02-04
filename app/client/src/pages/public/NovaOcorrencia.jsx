@@ -1,188 +1,250 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MapPin, Send } from 'lucide-react';
-import { toast } from 'react-toastify';
+import { MapContainer, TileLayer, Marker, useMapEvents, useMap } from 'react-leaflet';
+import { GeoSearchControl, OpenStreetMapProvider } from 'leaflet-geosearch';
+import 'leaflet/dist/leaflet.css';
+import 'leaflet-geosearch/dist/geosearch.css';
+import { UploadCloud, MapPin, AlertCircle, CheckCircle, ArrowLeft, Search } from 'lucide-react';
 import api from '../../services/api';
 import './NovaOcorrencia.css';
 
-// Componentes UI
-import { FormGroup, TextArea, Select, FileUploadArea } from '../../components/ui/FormComponents';
-import Button from '../../components/ui/Button';
+// --- COMPONENTE DE BUSCA NO MAPA ---
+const SearchField = ({ setPosition }) => {
+     const map = useMap();
+     useEffect(() => {
+          const provider = new OpenStreetMapProvider();
+          const searchControl = new GeoSearchControl({
+               provider: provider,
+               style: 'bar',
+               showMarker: false,
+               autoClose: true,
+               retainZoomLevel: false,
+               animateZoom: true,
+               keepResult: true,
+               searchLabel: 'Busque um endereço...',
+          });
+          map.addControl(searchControl);
+          map.on('geosearch/showlocation', (result) => {
+               if (result.location) setPosition({ lat: result.location.y, lng: result.location.x });
+          });
+          return () => map.removeControl(searchControl);
+     }, [map, setPosition]);
+     return null;
+};
+
+// --- MARCADOR DE CLIQUE ---
+function LocationMarker({ position, setPosition }) {
+     const map = useMapEvents({
+          click(e) {
+               setPosition(e.latlng);
+               map.flyTo(e.latlng, map.getZoom());
+          },
+     });
+     return position === null ? null : <Marker position={position}></Marker>;
+}
 
 const NovaOcorrencia = () => {
      const navigate = useNavigate();
+     const [loading, setLoading] = useState(false);
+     const [error, setError] = useState('');
 
-     // Estados do Formulário
+     // Estados
      const [descricao, setDescricao] = useState('');
+     const [dataOcorrencia, setDataOcorrencia] = useState(''); // Estado para Data Manual
      const [setorId, setSetorId] = useState('');
      const [categoriaId, setCategoriaId] = useState('');
-     const [arquivos, setArquivos] = useState([]);
+     const [fotos, setFotos] = useState([]);
+     const [previewFotos, setPreviewFotos] = useState([]);
+     const [position, setPosition] = useState(null);
 
-     // Estados de Localização
-     const [location, setLocation] = useState({ lat: null, lng: null });
-     const [locStatus, setLocStatus] = useState('idle'); // idle, loading, success, error
-
-     // Estados de Dados (Vindos do Back)
+     // Listas
      const [setores, setSetores] = useState([]);
      const [categorias, setCategorias] = useState([]);
 
-     // Estado de Carregamento Geral
-     const [submitting, setSubmitting] = useState(false);
+     // Centro inicial (Ex: UFOP)
+     const centroInicial = [-20.398, -43.508];
 
-     // 1. Carregar Metadados ao abrir a tela
      useEffect(() => {
-          api.get('/metadados')
-               .then(response => {
-                    setSetores(response.data.setores);
-                    setCategorias(response.data.categorias);
-               })
-               .catch(err => console.error("Erro ao carregar dados:", err));
+          api.get('/setores').then(res => setSetores(res.data));
+          api.get('/categorias').then(res => setCategorias(res.data));
      }, []);
 
-     // 2. Função para capturar GPS
-     const handleCaptureLocation = () => {
-          setLocStatus('loading');
-          if (!navigator.geolocation) {
-               toast.error("Seu navegador não suporta geolocalização.");
-               setLocStatus('error');
+     const handleFileChange = (e) => {
+          const files = Array.from(e.target.files);
+          if (files.length + fotos.length > 3) {
+               alert("Máximo de 3 fotos permitidas.");
                return;
           }
-
-          navigator.geolocation.getCurrentPosition(
-               (position) => {
-                    setLocation({
-                         lat: position.coords.latitude,
-                         lng: position.coords.longitude
-                    });
-                    setLocStatus('success');
-               },
-               (error) => {
-                    console.error(error);
-                    toast.error("Erro ao obter localização. Verifique as permissões.");
-                    setLocStatus('error');
-               }
-          );
+          setFotos([...fotos, ...files]);
+          const newPreviews = files.map(file => URL.createObjectURL(file));
+          setPreviewFotos([...previewFotos, ...newPreviews]);
      };
 
-     // 3. Função de Upload de Arquivos
-     const handleFileChange = (e) => {
-          setArquivos(e.target.files);
-     };
-
-     // 4. Enviar Formulário
      const handleSubmit = async (e) => {
           e.preventDefault();
-
-          // Validação Básica
-          if (!location.lat || !location.lng) {
-               toast.error("Por favor, capture a localização antes de enviar.");
-               return;
-          }
           if (!descricao || !setorId || !categoriaId) {
-               toast.error("Preencha todos os campos obrigatórios.");
+               setError("Preencha todos os campos obrigatórios (*).");
+               return;
+          }
+          if (!position) {
+               setError("A localização é obrigatória. Marque no mapa.");
                return;
           }
 
-          setSubmitting(true);
+          setLoading(true);
+          const formData = new FormData();
+          formData.append('descricao', descricao);
+
+          // Se o usuário preencheu a data opcional, envia
+          if (dataOcorrencia) {
+               formData.append('data_ocorrencia', dataOcorrencia);
+          }
+
+          formData.append('setorId', setorId);
+          formData.append('categoriaId', categoriaId);
+          formData.append('lat', position.lat);
+          formData.append('lng', position.lng);
+          fotos.forEach(foto => formData.append('fotos', foto));
 
           try {
-               // Montar o FormData (Obrigatório para envio de arquivos)
-               const formData = new FormData();
-               formData.append('descricao', descricao);
-               formData.append('setorId', setorId);
-               formData.append('categoriaId', categoriaId);
-               formData.append('lat', location.lat);
-               formData.append('lng', location.lng);
-
-               // Adicionar arquivos (loop pois é multiple)
-               for (let i = 0; i < arquivos.length; i++) {
-                    formData.append('fotos', arquivos[i]);
-               }
-
-               // Enviar para o Back-end
                await api.post('/ocorrencias', formData, {
                     headers: { 'Content-Type': 'multipart/form-data' }
                });
-
-               toast.success("Ocorrência registrada com sucesso!");
-               navigate('/lista'); // Redireciona para a lista
-          } catch (error) {
-               console.error(error);
-               const msg = error.response?.data?.erro || "Erro ao registrar.";
-               toast.error(msg);
+               alert("Ocorrência registrada!");
+               navigate('/lista');
+          } catch (err) {
+               console.error(err);
+               setError("Erro ao enviar. Tente novamente.");
           } finally {
-               setSubmitting(false);
+               setLoading(false);
           }
      };
 
      return (
-          <div className="nova-ocorrencia-wrapper centered-content">
+          <div className="nova-ocorrencia-wrapper">
                <div className="form-card">
 
-                    <header className="form-header">
-                         <h2>Registrar Nova Ocorrência</h2>
+                    <div className="form-header">
+                         <h1>Registrar Nova Ocorrência</h1>
                          <p>Preencha o formulário abaixo com os detalhes da ocorrência</p>
-                    </header>
+                    </div>
+
+                    {error && <div className="error-banner"><AlertCircle size={18} /> {error}</div>}
 
                     <form onSubmit={handleSubmit}>
+
                          {/* Descrição */}
-                         <FormGroup label="Descrição" required>
-                              <TextArea
+                         <div className="form-group">
+                              <label>Descrição <span className="required">*</span></label>
+                              <textarea
+                                   rows="4"
                                    placeholder="Descreva a ocorrência com o máximo de detalhes possível..."
                                    value={descricao}
                                    onChange={e => setDescricao(e.target.value)}
+                              ></textarea>
+                         </div>
+
+                         {/* NOVO CAMPO DE DATA */}
+                         <div className="form-group">
+                              <label>Quando aconteceu? (Opcional)</label>
+                              <input
+                                   type="datetime-local"
+                                   className="form-input-date"
+                                   value={dataOcorrencia}
+                                   onChange={e => setDataOcorrencia(e.target.value)}
+                                   style={{
+                                        padding: '12px',
+                                        border: '1px solid #d1d5db',
+                                        borderRadius: '8px',
+                                        width: '100%',
+                                        maxWidth: '300px'
+                                   }}
                               />
-                         </FormGroup>
+                              <p style={{ fontSize: '0.8rem', color: '#9ca3af', marginTop: '4px' }}>
+                                   Deixe em branco para usar a data de hoje (registro).
+                              </p>
+                         </div>
 
                          {/* Linha Dupla: Categoria e Setor */}
                          <div className="form-row">
-                              <FormGroup label="Categoria" required>
-                                   <Select
-                                        placeholder="Selecione..."
-                                        options={categorias}
-                                        value={categoriaId}
-                                        onChange={e => setCategoriaId(e.target.value)}
-                                   />
-                              </FormGroup>
+                              <div className="form-group">
+                                   <label>Categoria <span className="required">*</span></label>
+                                   <select value={categoriaId} onChange={e => setCategoriaId(e.target.value)}>
+                                        <option value="">Selecione...</option>
+                                        {categorias.map(c => <option key={c._id} value={c._id}>{c.nome}</option>)}
+                                   </select>
+                              </div>
 
-                              <FormGroup label="Setor" required>
-                                   <Select
-                                        placeholder="Selecione..."
-                                        options={setores}
-                                        value={setorId}
-                                        onChange={e => setSetorId(e.target.value)}
-                                   />
-                              </FormGroup>
+                              <div className="form-group">
+                                   <label>Setor <span className="required">*</span></label>
+                                   <select value={setorId} onChange={e => setSetorId(e.target.value)}>
+                                        <option value="">Selecione...</option>
+                                        {setores.map(s => <option key={s._id} value={s._id}>{s.nome}</option>)}
+                                   </select>
+                              </div>
                          </div>
 
-                         {/* Upload */}
-                         <FormGroup label="Anexos (Fotos, Documentos)">
-                              <FileUploadArea onFileSelect={handleFileChange} filesCount={arquivos.length} />
-                         </FormGroup>
+                         {/* Área de Upload Estilizada */}
+                         <div className="form-group">
+                              <label>Anexos (Fotos, Documentos)</label>
+                              <div className="upload-container">
+                                   <input
+                                        type="file"
+                                        multiple
+                                        accept="image/*"
+                                        onChange={handleFileChange}
+                                        id="file-upload"
+                                   />
+                                   <label htmlFor="file-upload" className="upload-box">
+                                        <div className="upload-icon-circle">
+                                             <UploadCloud size={28} color="#6c63ff" />
+                                        </div>
+                                        <span>Clique para selecionar arquivos</span>
+                                        <button type="button" className="btn-small-upload" onClick={() => document.getElementById('file-upload').click()}>
+                                             Selecionar Arquivos
+                                        </button>
+                                   </label>
+                              </div>
 
-                         {/* Geolocalização */}
-                         <FormGroup label="Geolocalização" required>
-                              <button
-                                   type="button"
-                                   className={`btn-geo ${locStatus}`}
-                                   onClick={handleCaptureLocation}
-                              >
-                                   <MapPin size={18} />
-                                   {locStatus === 'success' ? 'Localização Capturada!' :
-                                        locStatus === 'loading' ? 'Obtendo GPS...' : 'Capturar Localização'}
-                              </button>
-                              {locStatus === 'success' && (
-                                   <span className="geo-info">Lat: {location.lat.toFixed(4)}, Lng: {location.lng.toFixed(4)}</span>
+                              {/* Previews */}
+                              {previewFotos.length > 0 && (
+                                   <div className="preview-row">
+                                        {previewFotos.map((src, idx) => (
+                                             <div key={idx} className="preview-thumb">
+                                                  <img src={src} alt="preview" />
+                                             </div>
+                                        ))}
+                                   </div>
                               )}
-                         </FormGroup>
+                         </div>
+
+                         {/* Mapa Geolocalização */}
+                         <div className="form-group">
+                              <label>Geolocalização <span className="required">*</span></label>
+                              <div className="map-frame">
+                                   <MapContainer center={centroInicial} zoom={15} style={{ height: '300px', width: '100%' }}>
+                                        <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" attribution='&copy; OpenStreetMap' />
+                                        <SearchField setPosition={setPosition} />
+                                        <LocationMarker position={position} setPosition={setPosition} />
+                                   </MapContainer>
+
+                                   {/* Status sobre o mapa */}
+                                   <div className={`geo-status ${position ? 'geo-ok' : ''}`}>
+                                        {position ? (
+                                             <><CheckCircle size={16} /> Localização capturada: {position.lat.toFixed(4)}, {position.lng.toFixed(4)}</>
+                                        ) : (
+                                             <><Search size={16} /> Pesquise ou clique no mapa para marcar</>
+                                        )}
+                                   </div>
+                              </div>
+                         </div>
 
                          {/* Botões de Ação */}
                          <div className="form-actions">
-                              <Button type="submit" variant="solid" disabled={submitting}>
-                                   {submitting ? 'Enviando...' : <><Send size={18} style={{ marginRight: 8 }} /> Registrar Ocorrência</>}
-                              </Button>
-
-                              <button type="button" className="btn-cancel" onClick={() => navigate('/')}>
+                              <button type="submit" className="btn-primary" disabled={loading}>
+                                   {loading ? 'Enviando...' : 'Registrar Ocorrência'}
+                              </button>
+                              <button type="button" className="btn-secondary" onClick={() => navigate('/')}>
                                    Cancelar
                               </button>
                          </div>

@@ -20,6 +20,7 @@ app.use((req, res, next) => {
      next();
 });
 
+/*
 // 4. CONFIGURAÇÃO DE UPLOADS COM DEBUG
 // Serve os arquivos estáticos e loga se houver erro
 app.use('/uploads', (req, res, next) => {
@@ -35,7 +36,7 @@ app.use('/uploads', (req, res, next) => {
           res.status(404).send('Arquivo não encontrado');
      }
 }, express.static(path.join(__dirname, '..', 'uploads')));
-
+*/
 // 5. Rotas da API
 app.use('/api', appRoutes);
 

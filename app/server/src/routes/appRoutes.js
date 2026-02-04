@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
+const upload = require('../config/upload');
 
 // --- CONFIGURAÇÕES E MIDDLEWARES ---
-const upload = require('../config/multerConfig');
 const validateSchema = require('../middlewares/validateSchema');
 const rateLimiter = require('../middlewares/rateLimiter');
 
@@ -28,11 +28,7 @@ router.get('/metadados', MetadadosController.listarTudo);
 // =========================================================
 // ROTAS DE OCORRÊNCIAS
 // =========================================================
-router.post('/ocorrencias',
-     upload.array('fotos', 5),         // 1. Processa upload de imagens
-     validateSchema(ocorrenciaSchema), // 2. Valida campos (lat, lng, desc)
-     OcorrenciaController.registrar    // 3. Executa a lógica
-);
+router.post('/ocorrencias', upload.array('fotos', 5), OcorrenciaController.criar);
 
 router.get('/ocorrencias', OcorrenciaController.listar);
 
@@ -41,7 +37,7 @@ router.patch('/ocorrencias/:id/status', OcorrenciaController.atualizarStatus);
 
 router.get('/ocorrencias/:id', OcorrenciaController.buscarPorId);
 
-router.delete('/ocorrencias/:id/fotos/:nomeArquivo', OcorrenciaController.removerAnexo);  
+router.delete('/ocorrencias/:id/fotos/:nomeArquivo', OcorrenciaController.removerAnexo);
 
 router.delete('/ocorrencias/:id', OcorrenciaController.deletar);
 

@@ -27,6 +27,15 @@ const DetalhesOcorrencia = () => {
      const lat = ocorrencia.localizacao_geo?.coordinates[1];
      const lng = ocorrencia.localizacao_geo?.coordinates[0];
 
+     // --- LÓGICA DE DATA PARA DETALHES ---
+     // Verifica qual data exibir
+     const dataExibicao = ocorrencia.data_ocorrencia || ocorrencia.data_criacao || ocorrencia.data_hora;
+     const labelData = ocorrencia.data_ocorrencia ? "Data do Ocorrido" : "Data do Registro";
+
+     const dataFormatada = dataExibicao
+          ? new Date(dataExibicao).toLocaleString('pt-BR')
+          : 'N/D';
+
      return (
           <div className="detalhes-container centered-content">
                <Button onClick={() => navigate(-1)} variant="outline" style={{ marginBottom: '2rem' }}>
@@ -57,7 +66,7 @@ const DetalhesOcorrencia = () => {
                                         <MapPin size={18} /> <strong>Setor:</strong> {ocorrencia.nome_setor}
                                    </div>
                                    <div className="meta-row">
-                                        <Calendar size={18} /> <strong>Data:</strong> {new Date(ocorrencia.data_hora).toLocaleString()}
+                                        <Calendar size={18} /> <strong>{labelData}:</strong> {dataFormatada}
                                    </div>
                               </div>
                          </div>

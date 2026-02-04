@@ -33,7 +33,7 @@ const AppRoutes = () => {
                     <Route index element={<Home />} />
                     <Route path="nova" element={<NovaOcorrencia />} />
                     <Route path="lista" element={<Listagem />} />
-                    <Route path="ocorrencia/:id" element={<DetalhesOcorrencia />} />
+                    <Route path="ocorrencias/:id" element={<DetalhesOcorrencia />} />
                </Route>
 
                {/* ROTA DE LOGIN (Fora dos Layouts) */}
