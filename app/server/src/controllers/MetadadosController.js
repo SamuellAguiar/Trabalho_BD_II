@@ -5,7 +5,6 @@ class MetadadosController {
           try {
                const db = dbInstance.getDb();
 
-               // Busca paralela para ser mais rápido
                const [setores, categorias] = await Promise.all([
                     db.collection('setores').find({}).toArray(),
                     db.collection('categorias').find({}).toArray()
@@ -16,7 +15,7 @@ class MetadadosController {
                     categorias
                });
           } catch (error) {
-               next(error); // Passa para o errorHandler
+               next(error); 
           }
      }
 }

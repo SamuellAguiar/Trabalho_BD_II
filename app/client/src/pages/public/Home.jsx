@@ -12,9 +12,7 @@ const Home = () => {
      return (
           <div className="home-wrapper">
 
-               {/* --- HERO SECTION (Centralizado e Compacto) --- */}
                <section className="hero-section">
-                    {/* Fundo decorativo sutil */}
                     <div className="hero-bg-glow"></div>
 
                     <div className="hero-content-centered">
@@ -39,7 +37,6 @@ const Home = () => {
                               </Button>
                          </div>
 
-                         {/* Stats Integrados Compactos */}
                          <div className="hero-mini-stats center-flex">
                               <div className="mini-stat">
                                    <strong>+500</strong> <span>Resolvidos</span>
@@ -55,16 +52,12 @@ const Home = () => {
                          </div>
                     </div>
 
-                    {/* Onda decorativa mantida para transição suave */}
                     <div className="hero-wave">
                          <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg">
                               <path d="M0 60L60 55C120 50 240 40 360 45C480 50 600 70 720 75C840 80 960 70 1080 60C1200 50 1320 40 1380 35L1440 30V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0V60Z" fill="#fafafa" />
                          </svg>
                     </div>
                </section>
-
-               {/* --- AS OUTRAS SEÇÕES CONTINUAM IGUAIS ABAIXO --- */}
-               {/* (Mantenha o restante do código do Home.jsx que enviei anteriormente aqui: steps-section, features-section, cta-section) */}
 
                <section className="steps-section centered-content">
                     <div className="section-header">
@@ -95,7 +88,6 @@ const Home = () => {
                     </div>
                </section>
 
-               {/* --- SEÇÃO: RECURSOS (Grid) --- */}
                <section className="features-section centered-content">
                     <div className="features-container-box">
                          <div className="features-text">
@@ -131,7 +123,6 @@ const Home = () => {
                     </div>
                </section>
 
-               {/* --- CHAMADA FINAL (CTA) --- */}
                <section className="cta-section">
                     <div className="cta-content centered-content">
                          <h2>Pronto para fazer a diferença?</h2>

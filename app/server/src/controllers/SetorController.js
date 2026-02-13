@@ -3,7 +3,6 @@ const dbInstance = require('../config/database');
 
 class SetorController {
 
-     // Helper para instanciar o service (evita repetição)
      _getService() {
           const db = dbInstance.getDb();
           return new SetorService(db);
@@ -47,7 +46,6 @@ class SetorController {
                await service.deletar(id);
                return res.status(200).json({ mensagem: "Setor excluído com sucesso." });
           } catch (error) {
-               // Se for erro de integridade (tem ocorrências), retornamos 409 (Conflict)
                if (error.message.includes('vinculadas')) {
                     return res.status(409).json({ erro: error.message });
                }

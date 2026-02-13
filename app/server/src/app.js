@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
-const fs = require('fs'); // <--- A LINHA QUE FALTAVA
+const fs = require('fs');
 const appRoutes = require('./routes/appRoutes');
 
 const app = express();
@@ -20,24 +20,7 @@ app.use((req, res, next) => {
      next();
 });
 
-/*
-// 4. CONFIGURAÇÃO DE UPLOADS COM DEBUG
-// Serve os arquivos estáticos e loga se houver erro
-app.use('/uploads', (req, res, next) => {
-     const pastaUploads = path.join(__dirname, '..', 'uploads'); // Sobe um nível para sair de 'src'
-     const caminhoArquivo = path.join(pastaUploads, req.path);
-
-     // Verifica se o arquivo existe (agora o fs vai funcionar)
-     if (fs.existsSync(caminhoArquivo)) {
-          console.log(`✅ Arquivo encontrado: ${req.path}`);
-          next(); // Passa para o express.static entregar
-     } else {
-          console.error(`❌ Arquivo não encontrado no disco: ${caminhoArquivo}`);
-          res.status(404).send('Arquivo não encontrado');
-     }
-}, express.static(path.join(__dirname, '..', 'uploads')));
-*/
-// 5. Rotas da API
+// 4. Rotas da API
 app.use('/api', appRoutes);
 
 // 6. Tratamento de Erros

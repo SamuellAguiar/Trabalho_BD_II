@@ -5,16 +5,13 @@
      font-family: 'Inter', sans-serif;
 }
 
-/* Sidebar */
 .admin-sidebar {
      width: 250px;
      background-color: #1a202c;
-     /* Escuro */
      color: white;
      display: flex;
      flex-direction: column;
      position: fixed;
-     /* Fixa na tela */
      height: 100vh;
      z-index: 100;
 }
@@ -53,7 +50,6 @@
 
 .sidebar-link.active {
      background-color: #6c63ff;
-     /* Roxo ativo */
      color: white;
      font-weight: 600;
 }
@@ -72,10 +68,8 @@
      color: #742a2a;
 }
 
-/* Conteúdo */
 .admin-content {
      margin-left: 250px;
-     /* Compensa a largura da sidebar */
      flex: 1;
      width: calc(100% - 250px);
 }
@@ -103,19 +97,16 @@
      font-weight: bold;
 }
 
-/* Container da direita do Header */
 .topbar-actions {
      display: flex;
      align-items: center;
      gap: 1rem;
 }
 
-/* O botão de sair do Header */
 .btn-header-logout {
      background: transparent;
      border: none;
      color: #e53e3e;
-     /* Vermelho */
      cursor: pointer;
      padding: 8px;
      border-radius: 50%;
@@ -129,45 +120,31 @@
      background-color: #fff5f5;
 }
 
-/* --- AJUSTES NO MOBILE --- */
 @media (max-width: 768px) {
-     /* No mobile, garantimos que o botão de sair do header apareça,
-     mesmo que a badge de "Administrador" esteja oculta 
-  */
 
      .badge-user {
           display: none;
-          /* Oculta o texto "Administrador" pra economizar espaço */
      }
 
      .btn-header-logout {
           display: flex;
-          /* Garante que o ícone de sair apareça */
           background-color: #fff5f5;
-          /* Um fundinho leve pra destacar que é clicável */
      }
 
-     /* Ajuste fino na sidebar inferior */
      .sidebar-link span {
           font-size: 0.65rem;
-          /* Diminui um pouco a fonte pra caber "Categorias" */
      }
 }
 
-/* --- RESPONSIVIDADE MOBILE (ESTILO APP) --- */
 @media (max-width: 768px) {
 
-     /* 1. Sidebar vira Barra Inferior */
      .admin-sidebar {
           width: 100%;
           height: 65px;
-          /* Altura fixa barra inferior */
           bottom: 0;
           top: auto;
-          /* Remove do topo */
           left: 0;
           flex-direction: row;
-          /* Itens lado a lado */
           justify-content: space-around;
           align-items: center;
           padding: 0;
@@ -175,7 +152,6 @@
           box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
      }
 
-     /* 2. Ajuste dos Links da Navegação */
      .sidebar-nav {
           flex-direction: row;
           padding: 0;
@@ -185,46 +161,37 @@
 
      .sidebar-link {
           flex-direction: column;
-          /* Ícone em cima, texto embaixo */
           gap: 4px;
           padding: 8px;
           font-size: 0.7rem;
-          /* Texto menor */
           text-align: center;
           border-radius: 0;
      }
 
      .sidebar-link span {
           display: block;
-          /* Garante que o texto apareça */
      }
 
-     /* Indicador de Ativo (Barra no topo do ícone) */
      .sidebar-link.active {
           background-color: transparent;
           color: #6c63ff;
           border-top: 2px solid #6c63ff;
      }
 
-     /* 3. Esconder coisas desnecessárias no mobile */
      .sidebar-header,
      .sidebar-footer {
           display: none;
-          /* Esconde logo e logout na barra inferior */
      }
 
-     /* 4. Ajuste do Conteúdo Principal */
      .admin-content {
           margin-left: 0;
           width: 100%;
           margin-bottom: 70px;
-          /* Espaço para não ficar atrás da barra */
      }
 
      .admin-topbar {
           padding: 0 1rem;
           justify-content: center;
-          /* Centraliza título */
      }
 
      .admin-topbar h2 {
@@ -233,6 +200,5 @@
 
      .badge-user {
           display: none;
-          /* Esconde badge para limpar visual */
      }
 }

@@ -229,5 +229,3 @@ Trabalho_BD_II/
 ## Licença
 
 Este projeto foi desenvolvido como trabalho acadêmico para a disciplina de Banco de Dados II.
-
-

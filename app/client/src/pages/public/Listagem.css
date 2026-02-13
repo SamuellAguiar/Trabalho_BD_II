@@ -1,11 +1,8 @@
-/* Container Principal - A Mágica do Centralizar acontece aqui */
+
 .listagem-wrapper {
      max-width: 1000px;
-     /* Define um limite de largura (como uma caixa no meio) */
      width: 95%;
-     /* Nos celulares, ocupa 95% da tela (deixa borda) */
      margin: 0 auto;
-     /* Centraliza a caixa na tela horizontalmente */
      padding-top: 3rem;
      padding-bottom: 4rem;
 }
@@ -13,7 +10,6 @@
 .page-header {
      margin-bottom: 2rem;
      text-align: center;
-     /* Centraliza o título também */
 }
 
 .page-header h1 {
@@ -28,14 +24,11 @@
      font-size: 1.1rem;
 }
 
-/* --- CARD DE FILTROS --- */
 .filters-card {
      background: white;
      padding: 1.5rem;
      border-radius: 16px;
-     /* Borda mais arredondada */
      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-     /* Sombra mais suave */
      margin-bottom: 2rem;
      border: 1px solid #edf2f7;
 }
@@ -50,27 +43,22 @@
      font-size: 1.1rem;
 }
 
-/* Grid dos Filtros */
 .filters-grid {
      display: grid;
      grid-template-columns: 2fr 1fr 1fr;
-     /* Busca maior, selects menores */
      gap: 1rem;
      align-items: center;
 }
 
 .search-col {
      grid-column: span 3;
-     /* A busca ocupa a primeira linha inteira */
 }
 
-/* Grupo de Datas */
 .date-filter-group {
      display: flex;
      align-items: center;
      gap: 10px;
      grid-column: span 3;
-     /* Datas ocupam uma linha inteira para não quebrar */
      background: #f8f9fa;
      padding: 10px;
      border-radius: 8px;
@@ -79,7 +67,6 @@
 
 .date-filter-group input {
      flex: 1;
-     /* Divide espaço igual */
      background: white;
 }
 
@@ -89,7 +76,6 @@
      font-size: 0.9rem;
 }
 
-/* Inputs e Selects */
 .form-input,
 select.form-input {
      width: 100%;
@@ -100,7 +86,6 @@ select.form-input {
      color: #4a5568;
      transition: all 0.2s;
      height: 48px;
-     /* Altura fixa para alinhar tudo */
 }
 
 .form-input:focus {
@@ -109,7 +94,6 @@ select.form-input {
      box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.1);
 }
 
-/* --- LISTAGEM --- */
 .results-count {
      font-size: 0.9rem;
      color: #718096;
@@ -123,7 +107,6 @@ select.form-input {
      gap: 1.2rem;
 }
 
-/* CARD DA OCORRÊNCIA */
 .occurrence-card {
      background: white;
      border-radius: 12px;
@@ -181,7 +164,6 @@ select.form-input {
      margin-left: auto;
 }
 
-/* Estados de Carregamento */
 .loading-text,
 .empty-state {
      text-align: center;
@@ -193,16 +175,12 @@ select.form-input {
      border: 1px dashed #cbd5e0;
 }
 
-/* ... mantenha o resto do CSS que já existia ... */
-
-/* Adicione ou Substitua esta parte das imagens */
 
 .card-attachment-preview {
      margin-top: 1rem;
      margin-bottom: 1rem;
      width: 100%;
      height: 200px;
-     /* Altura fixa para não estourar */
      border-radius: 8px;
      overflow: hidden;
      position: relative;
@@ -214,13 +192,11 @@ select.form-input {
      width: 100%;
      height: 100%;
      object-fit: cover;
-     /* ISSO CORRIGE A IMAGEM GIGANTE */
      transition: transform 0.3s ease;
 }
 
 .occurrence-card:hover .thumb-img {
      transform: scale(1.05);
-     /* Um zoom suave ao passar o mouse */
 }
 
 .more-photos {
@@ -235,7 +211,6 @@ select.form-input {
      font-weight: 600;
 }
 
-/* --- RESPONSIVIDADE (Mobile) --- */
 @media (max-width: 768px) {
      .listagem-wrapper {
           padding-top: 2rem;
@@ -255,7 +230,6 @@ select.form-input {
 
      .date-filter-group {
           flex-direction: column;
-          /* Datas uma em cima da outra no celular */
           align-items: flex-start;
      }
 

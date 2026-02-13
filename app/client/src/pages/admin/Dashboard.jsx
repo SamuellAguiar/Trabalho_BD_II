@@ -10,17 +10,14 @@ import {
 import { MapContainer, TileLayer } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 
-// Bibliotecas de PDF
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
-// Importe sua logo (opcional)
 import logoImg from '/favicon.png';
 
 import api from '../../services/api';
 import './Dashboard.css';
 
-// Componentes UI
 import KpiCard from '../../components/ui/KpiCard';
 import ReportButton from '../../components/ui/ReportButton';
 import HeatmapLayer from '../../components/ui/HeatmapLayer';
@@ -39,9 +36,9 @@ const Dashboard = () => {
 
      // Cores do Sistema
      const COLORS_STATUS = {
-          'PENDENTE': '#e53e3e',   // Vermelho
-          'ANALISANDO': '#dd6b20', // Laranja
-          'RESOLVIDO': '#38a169'   // Verde
+          'PENDENTE': '#e53e3e',   
+          'ANALISANDO': '#dd6b20',
+          'RESOLVIDO': '#38a169'  
      };
 
      useEffect(() => {
@@ -119,19 +116,16 @@ const Dashboard = () => {
           setPontosMapa(coords);
      };
 
-     // --- FUNÇÃO GERADORA DE RELATÓRIOS PDF (Atualizada) ---
      const gerarRelatorioPDF = (tipoRelatorio) => {
           try {
                const doc = new jsPDF();
                const primaryColor = [108, 99, 255]; // Roxo
                const currentDate = new Date().toLocaleDateString('pt-BR');
 
-               // --- LOGO (Tenta carregar) ---
                try {
                     doc.addImage(logoImg, 'PNG', 14, 10, 25, 25);
-               } catch (e) { /* Sem logo, segue o jogo */ }
+               } catch (e) { }
 
-               // --- CABEÇALHO ---
                doc.setFont("helvetica", "bold");
                doc.setFontSize(22);
                doc.setTextColor(45, 55, 72);
@@ -142,26 +136,22 @@ const Dashboard = () => {
                doc.setTextColor(100);
                doc.text("Sistema de Gestão de Ocorrências e Monitoramento", 45, 26);
 
-               // Linha Divisória
                doc.setDrawColor(...primaryColor);
                doc.setLineWidth(1);
                doc.line(14, 38, 196, 38);
 
-               // Título Específico
                doc.setFontSize(16);
                doc.setFont("helvetica", "bold");
                doc.setTextColor(45, 55, 72);
                doc.text(`Relatório - ${tipoRelatorio}`, 14, 50);
 
-               // --- LÓGICA DE DADOS POR TIPO ---
                let colunas = [];
                let dadosFormatados = [];
-               let dadosFiltrados = [...data]; // Cópia dos dados
+               let dadosFiltrados = [...data]; 
 
                switch (tipoRelatorio) {
-                    case 'Zonas Críticas': // (Por Setor)
+                    case 'Zonas Críticas': 
                          colunas = [['Zona / Setor', 'Qtd. Ocorrências', 'Último Registro']];
-                         // Agrupa e conta
                          const countSetor = {};
                          const lastDateSetor = {};
                          dadosFiltrados.forEach(d => {
@@ -171,13 +161,13 @@ const Dashboard = () => {
                          });
                          dadosFormatados = Object.keys(countSetor).map(key => [
                               key, countSetor[key], lastDateSetor[key]
-                         ]).sort((a, b) => b[1] - a[1]); // Ordena por quantidade (descrescente)
+                         ]).sort((a, b) => b[1] - a[1]); 
                          break;
 
                     case 'Cronológico':
                          colunas = [['Data/Hora', 'Descrição', 'Setor', 'Status']];
                          dadosFormatados = dadosFiltrados
-                              .sort((a, b) => new Date(b.data_hora) - new Date(a.data_hora)) // Mais recente primeiro
+                              .sort((a, b) => new Date(b.data_hora) - new Date(a.data_hora)) 
                               .map(item => [
                                    new Date(item.data_hora).toLocaleString('pt-BR'),
                                    item.descricao.substring(0, 40) + '...',
@@ -189,8 +179,8 @@ const Dashboard = () => {
                     case 'Pendências':
                          colunas = [['Descrição', 'Setor', 'Aberto em']];
                          dadosFormatados = dadosFiltrados
-                              .filter(i => i.status !== 'RESOLVIDO') // Só o que não está resolvido
-                              .sort((a, b) => new Date(a.data_hora) - new Date(b.data_hora)) // Mais antigo primeiro (urgente)
+                              .filter(i => i.status !== 'RESOLVIDO') 
+                              .sort((a, b) => new Date(a.data_hora) - new Date(b.data_hora)) 
                               .map(item => [
                                    item.descricao.substring(0, 40) + '...',
                                    item.nome_setor || 'N/A',
@@ -210,7 +200,7 @@ const Dashboard = () => {
                               ]);
                          break;
 
-                    default: // Geral/Status
+                    default: 
                          colunas = [['Status', 'Descrição', 'Setor', 'Categoria']];
                          dadosFormatados = dadosFiltrados.map(item => [
                               item.status,
@@ -220,7 +210,6 @@ const Dashboard = () => {
                          ]);
                }
 
-               // --- BOX DE RESUMO ---
                doc.setFillColor(247, 250, 252);
                doc.roundedRect(14, 55, 182, 20, 3, 3, 'F');
                doc.setFontSize(10);
@@ -228,7 +217,6 @@ const Dashboard = () => {
                doc.text(`Total de Registros Listados: ${dadosFormatados.length}`, 20, 68);
                doc.text(`Gerado em: ${currentDate}`, 150, 68);
 
-               // --- TABELA ---
                autoTable(doc, {
                     head: colunas,
                     body: dadosFormatados,
@@ -329,7 +317,6 @@ const Dashboard = () => {
                          <h3> Mapa de Calor (Zonas Críticas)</h3>
                     </div>
                     <div style={{ height: '400px', width: '100%', position: 'relative' }}>
-                         {/* AJUSTE AQUI AS COORDENADAS DO SEU CAMPUS */}
                          <MapContainer center={[-20.398, -43.508]} zoom={15} style={{ height: '100%', width: '100%' }}>
                               <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
                               <HeatmapLayer points={pontosMapa} />
@@ -342,28 +329,24 @@ const Dashboard = () => {
                     <h3> Central de Relatórios</h3>
                     <div className="reports-grid">
 
-                         {/* Relatório 1: Por Zonas (O que você pediu) */}
                          <ReportButton
                               icon={MapIcon}
                               label="Relatório de Zonas"
                               onClick={() => gerarRelatorioPDF('Zonas Críticas')}
                          />
 
-                         {/* Relatório 2: Cronológico (Histórico completo) */}
                          <ReportButton
                               icon={Calendar}
                               label="Histórico Cronológico"
                               onClick={() => gerarRelatorioPDF('Cronológico')}
                          />
 
-                         {/* Relatório 3: Operacional (Pendências) */}
                          <ReportButton
                               icon={AlertTriangle}
                               label="Relatório de Pendências"
                               onClick={() => gerarRelatorioPDF('Pendências')}
                          />
 
-                         {/* Relatório 4: Por Categoria */}
                          <ReportButton
                               icon={Folder}
                               label="Análise por Categoria"

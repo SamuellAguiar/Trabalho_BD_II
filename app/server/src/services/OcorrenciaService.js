@@ -61,7 +61,6 @@ class OcorrenciaService {
                dados.data_ocorrencia = new Date(dados.data_ocorrencia);
           }
 
-          // Inserir no Banco
           const resultado = await this.collection.insertOne(dados);
 
           return {
@@ -88,7 +87,7 @@ class OcorrenciaService {
                matchStage.Setor_REF = new ObjectId(filtros.setorId);
           }
 
-          // Filtro de Data (Geralmente filtramos pela data de criação do registro no sistema)
+          // Filtro de Data 
           if (filtros.dataInicio || filtros.dataFim) {
                matchStage.data_criacao = {};
                if (filtros.dataInicio) {
@@ -120,9 +119,8 @@ class OcorrenciaService {
                {
                     $project: {
                          descricao: 1,
-                         data_criacao: 1,    // Data Sistema
-                         data_ocorrencia: 1, // Data Usuário (pode ser null)
-                         // Mantemos data_hora antiga se existir (para compatibilidade)
+                         data_criacao: 1,   
+                         data_ocorrencia: 1, 
                          data_hora: 1,
                          status: 1,
                          localizacao_geo: 1,
@@ -133,7 +131,7 @@ class OcorrenciaService {
                          Categoria_REF: 1
                     }
                },
-               { $sort: { data_criacao: -1 } } // Ordena pelos mais recentes registrados
+               { $sort: { data_criacao: -1 } } 
           ];
 
           return await this.collection.aggregate(pipeline).toArray();

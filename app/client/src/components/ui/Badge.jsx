@@ -2,7 +2,6 @@ import React from 'react';
 import './Badge.css';
 
 const Badge = ({ status }) => {
-     // Mapeamento de Status para Classes e Textos
      const config = {
           'PENDENTE': { label: 'Pendente', className: 'badge-yellow' },
           'ANALISANDO': { label: 'Em Andamento', className: 'badge-blue' },

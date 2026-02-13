@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import { Trash2, Save, X, Plus, ImageOff } from 'lucide-react'; // Adicionei ImageOff
+import { Trash2, Save, X, Plus, ImageOff } from 'lucide-react'; 
 import { useNavigate } from 'react-router-dom';
-import api, { getImageUrl } from '../../services/api'; // Importe getImageUrl
+import api, { getImageUrl } from '../../services/api';
 import './GerenciarGenerico.css';
 import Badge from '../../components/ui/Badge';
 import Button from '../../components/ui/Button';
@@ -12,7 +12,6 @@ const GerenciarOcorrencias = () => {
      const [ocorrencias, setOcorrencias] = useState([]);
      const [loading, setLoading] = useState(true);
 
-     // Estado para Edição Rápida de Status
      const [editandoId, setEditandoId] = useState(null);
      const [novoStatus, setNovoStatus] = useState('');
 
@@ -95,12 +94,10 @@ const GerenciarOcorrencias = () => {
           }
      };
 
-     // --- NOVA FUNÇÃO: DELETAR FOTO ---
      const handleDeletarFoto = async (idOcorrencia, nomeArquivo) => {
           const confirmado = await confirmToast("Deseja remover esta imagem?");
           if (!confirmado) return;
           try {
-               // Envia apenas o nome do arquivo para a rota de delete
                await api.delete(`/ocorrencias/${idOcorrencia}/fotos/${nomeArquivo}`);
                toast.success("Imagem removida.");
                carregarDados();
@@ -134,7 +131,6 @@ const GerenciarOcorrencias = () => {
                                         <span className="meta-date">{new Date(item.data_hora).toLocaleDateString()}</span>
                                    </div>
 
-                                   {/* --- ÁREA DE FOTOS (NOVO) --- */}
                                    {item.anexos && item.anexos.length > 0 && (
                                         <div className="admin-photos-row">
                                              {item.anexos.map((anexo, idx) => {
@@ -146,7 +142,7 @@ const GerenciarOcorrencias = () => {
                                                                       src={getImageUrl(anexo.caminho_arquivo)}
                                                                       alt="Evidência"
                                                                       className="admin-thumb"
-                                                                      onError={(e) => e.target.style.display = 'none'} // Esconde se der erro
+                                                                      onError={(e) => e.target.style.display = 'none'} 
                                                                  />
                                                             </a>
                                                             <button

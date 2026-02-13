@@ -2,11 +2,8 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 
-// USAR process.cwd() É MAIS SEGURO NO RENDER
-// Ele pega exatamente a pasta onde o comando 'node server.js' foi rodado
 const uploadDir = path.join(process.cwd(), 'uploads');
 
-// Se a pasta não existir, cria ela agora!
 if (!fs.existsSync(uploadDir)) {
      try {
           fs.mkdirSync(uploadDir, { recursive: true });

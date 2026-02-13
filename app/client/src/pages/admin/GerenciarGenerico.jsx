@@ -3,7 +3,7 @@ import { Trash2, Plus, Save, X, Pencil } from 'lucide-react';
 import api from '../../services/api';
 import './GerenciarGenerico.css';
 import Button from '../../components/ui/Button';
-import { toast } from 'react-toastify'; // Usando toast se você já instalou, senão mude para alert
+import { toast } from 'react-toastify'; 
 
 const GerenciarGenerico = ({ titulo, endpoint, tipo }) => {
      const [itens, setItens] = useState([]);
@@ -21,7 +21,6 @@ const GerenciarGenerico = ({ titulo, endpoint, tipo }) => {
           setLoading(true);
           try {
                const response = await api.get(endpoint);
-               // Se o endpoint for /metadados, pegamos o array certo. Se for direto (/setores), pega data
                const lista = response.data[tipo] || response.data;
                setItens(lista);
           } catch (error) {
@@ -38,7 +37,6 @@ const GerenciarGenerico = ({ titulo, endpoint, tipo }) => {
           setEditandoId(null);
      }, [endpoint]);
 
-     // --- CRUD OPERATIONS ---
 
      const handleAdicionar = async () => {
           if (!novoNome.trim()) return;
@@ -66,13 +64,11 @@ const GerenciarGenerico = ({ titulo, endpoint, tipo }) => {
           }
      };
 
-     // Iniciar Edição
      const startEdit = (item) => {
           setEditandoId(item._id);
           setNomeEdicao(item.nome);
      };
 
-     // Salvar Edição (PUT)
      const handleSalvarEdicao = async () => {
           try {
                await api.put(`${endpoint}/${editandoId}`, { nome: nomeEdicao });
@@ -97,7 +93,6 @@ const GerenciarGenerico = ({ titulo, endpoint, tipo }) => {
                     </Button>
                </header>
 
-               {/* Formulário de Adição Inline */}
                {adicionando && (
                     <div className="add-card">
                          <input
@@ -124,7 +119,6 @@ const GerenciarGenerico = ({ titulo, endpoint, tipo }) => {
                     {loading ? <p>Carregando...</p> : itens.map(item => (
                          <div key={item._id} className="item-card">
 
-                              {/* Se estiver editando este item, mostra o input. Se não, mostra o texto. */}
                               {editandoId === item._id ? (
                                    <div className="edit-mode-row">
                                         <input

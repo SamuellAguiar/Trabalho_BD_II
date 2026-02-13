@@ -29,11 +29,10 @@ const Listagem = () => {
           carregarOcorrencias();
      }, []);
 
-     // Recarrega sempre que um filtro mudar
      useEffect(() => {
           const delayDebounce = setTimeout(() => {
                carregarOcorrencias();
-          }, 500); // Espera usuário parar de digitar
+          }, 500); 
           return () => clearTimeout(delayDebounce);
      }, [busca, filtroStatus, filtroCategoria, filtroSetor, dataInicio, dataFim]);
 
@@ -53,7 +52,6 @@ const Listagem = () => {
      async function carregarOcorrencias() {
           setLoading(true);
           try {
-               // Monta a Query String
                const params = new URLSearchParams();
                if (busca) params.append('busca', busca);
                if (filtroStatus) params.append('status', filtroStatus);
@@ -80,11 +78,7 @@ const Listagem = () => {
           }
      };
 
-     // --- NOVA LÓGICA DE DATA PARA LISTAGEM ---
      const formatarData = (item) => {
-          // Se o usuário informou "quando aconteceu", mostramos essa data.
-          // Se não, mostramos a data de registro (data_criacao).
-          // Se for um dado antigo que só tem data_hora, usamos ela.
           const dataParaExibir = item.data_ocorrencia || item.data_criacao || item.data_hora;
 
           if (!dataParaExibir) return 'Data N/D';
@@ -95,9 +89,7 @@ const Listagem = () => {
           });
      };
 
-     // Função para checar e exibir localização
      const renderLocalizacao = (geo) => {
-          // GeoJSON no Mongo é { type: 'Point', coordinates: [lng, lat] }
           if (geo && geo.coordinates && geo.coordinates.length === 2) {
                const [lng, lat] = geo.coordinates;
                return (
@@ -113,20 +105,17 @@ const Listagem = () => {
      return (
           <div className="listagem-wrapper">
 
-               {/* Cabeçalho */}
                <div className="page-header">
                     <h1>Ocorrências</h1>
                     <p>Visualize e acompanhe todas as ocorrências registradas</p>
                </div>
 
-               {/* Card de Filtros */}
                <div className="filters-card">
                     <div className="filters-title">
                          <Filter size={18} /> Filtros
                     </div>
 
                     <div className="filters-grid">
-                         {/* Busca Textual */}
                          <div className="search-col">
                               <input
                                    type="text"
@@ -137,7 +126,6 @@ const Listagem = () => {
                               />
                          </div>
 
-                         {/* Selects */}
                          <select className="form-input" value={filtroStatus} onChange={e => setFiltroStatus(e.target.value)}>
                               <option value="">Todos os Status</option>
                               <option value="PENDENTE">Pendente</option>
@@ -155,7 +143,6 @@ const Listagem = () => {
                               {setores.map(s => <option key={s._id} value={s._id}>{s.nome}</option>)}
                          </select>
 
-                         {/* Datas */}
                          <div className="date-filter-group">
                               <input type="date" className="form-input" value={dataInicio} onChange={e => setDataInicio(e.target.value)} />
                               <span className="date-separator">até</span>
@@ -164,7 +151,6 @@ const Listagem = () => {
                     </div>
                </div>
 
-               {/* Lista de Cards */}
                <div className="results-count">Mostrando {ocorrencias.length} ocorrência(s)</div>
 
                <div className="occurrences-list">
@@ -190,7 +176,6 @@ const Listagem = () => {
                                         {item.descricao}
                                    </div>
 
-                                   {/* Miniatura da Foto (Se houver) */}
                                    {item.anexos && item.anexos.length > 0 && (
                                         <div className="card-attachment-preview">
                                              <img
@@ -210,12 +195,10 @@ const Listagem = () => {
                                              <MapPin size={16} /> {item.nome_setor || 'Sem Setor'}
                                         </div>
 
-                                        {/* AQUI É ONDE APARECE A LOCALIZAÇÃO GPS */}
                                         <div className="meta-item">
                                              {renderLocalizacao(item.localizacao_geo)}
                                         </div>
 
-                                        {/* AQUI USAMOS A NOVA FUNÇÃO DE DATA */}
                                         <div className="meta-item date">
                                              <Calendar size={16} /> {formatarData(item)}
                                         </div>

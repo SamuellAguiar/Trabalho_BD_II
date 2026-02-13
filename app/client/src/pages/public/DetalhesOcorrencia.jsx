@@ -27,8 +27,6 @@ const DetalhesOcorrencia = () => {
      const lat = ocorrencia.localizacao_geo?.coordinates[1];
      const lng = ocorrencia.localizacao_geo?.coordinates[0];
 
-     // --- LÓGICA DE DATA PARA DETALHES ---
-     // Verifica qual data exibir
      const dataExibicao = ocorrencia.data_ocorrencia || ocorrencia.data_criacao || ocorrencia.data_hora;
      const labelData = ocorrencia.data_ocorrencia ? "Data do Ocorrido" : "Data do Registro";
 
@@ -43,7 +41,6 @@ const DetalhesOcorrencia = () => {
                </Button>
 
                <div className="detalhes-card">
-                    {/* Cabeçalho */}
                     <header className="detalhes-header">
                          <div className="header-top">
                               <h1>Detalhes da Ocorrência</h1>
@@ -52,7 +49,6 @@ const DetalhesOcorrencia = () => {
                          <span className="id-label">ID: {ocorrencia._id}</span>
                     </header>
 
-                    {/* Informações Principais */}
                     <div className="detalhes-grid">
                          <div className="info-section">
                               <h3>Descrição</h3>
@@ -71,7 +67,6 @@ const DetalhesOcorrencia = () => {
                               </div>
                          </div>
 
-                         {/* Mapa */}
                          <div className="map-section">
                               {lat && lng ? (
                                    <MapContainer center={[lat, lng]} zoom={16} style={{ height: '100%', width: '100%', borderRadius: '12px' }}>
@@ -84,7 +79,6 @@ const DetalhesOcorrencia = () => {
                          </div>
                     </div>
 
-                    {/* Galeria de Fotos */}
                     <div className="fotos-section">
                          <h3><ImageIcon size={20} style={{ marginRight: 8 }} /> Evidências / Fotos</h3>
                          <div className="fotos-grid">

@@ -7,7 +7,6 @@ class Database {
           this.db = null;
      }
 
-     // Usar arrow function garante que o 'this' seja sempre a instância da classe
      connect = async () => {
           if (!this.db) {
                try {
@@ -30,5 +29,4 @@ class Database {
      }
 }
 
-// Exportamos uma única instância (Padrão Singleton)
 module.exports = new Database();

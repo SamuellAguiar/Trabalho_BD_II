@@ -8,18 +8,17 @@ class OcorrenciaController {
                const db = dbInstance.getDb();
                const service = new OcorrenciaService(db);
 
-               // Monta o array de anexos pegando a URL que o Cloudinary devolveu
                let anexos = [];
                if (req.files && req.files.length > 0) {
                     anexos = req.files.map(file => ({
-                         caminho_arquivo: file.path, // <--- AQUI ESTÁ O SEGREDO! O path agora é uma URL https://...
+                         caminho_arquivo: file.path,
                          tipo_arquivo: file.mimetype
                     }));
                }
 
                const dadosOcorrencia = {
                     ...req.body,
-                    anexos: anexos, // Salva o array com links do Cloudinary
+                    anexos: anexos, 
                     status: 'PENDENTE',
                     data_hora: new Date()
                };
@@ -50,7 +49,7 @@ class OcorrenciaController {
                const db = dbInstance.getDb();
                const service = new OcorrenciaService(db);
                const { id } = req.params;
-               const { status } = req.body; // Espera receber { "status": "RESOLVIDO" }
+               const { status } = req.body; 
 
                await service.atualizarStatus(id, status);
                return res.status(200).json({ mensagem: "Status atualizado com sucesso!" });
@@ -76,7 +75,7 @@ class OcorrenciaController {
           try {
                const db = dbInstance.getDb();
                const service = new OcorrenciaService(db);
-               const { id, nomeArquivo } = req.params; // Vamos passar o nome na URL
+               const { id, nomeArquivo } = req.params; 
 
                await service.removerAnexo(id, nomeArquivo);
                return res.status(200).json({ mensagem: "Foto removida." });

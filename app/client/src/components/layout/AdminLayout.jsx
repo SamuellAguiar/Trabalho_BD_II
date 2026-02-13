@@ -1,5 +1,5 @@
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Map, List, LogOut, FileText } from 'lucide-react'; // Certifique-se de importar o LogOut
+import { LayoutDashboard, Map, List, LogOut, FileText } from 'lucide-react'; 
 import './AdminLayout.css';
 
 const AdminLayout = () => {
@@ -19,7 +19,6 @@ const AdminLayout = () => {
 
      return (
           <div className="admin-layout">
-               {/* Sidebar Lateral (Desktop) / Barra Inferior (Mobile) */}
                <aside className="admin-sidebar">
                     <div className="sidebar-header">
                          <h3>Painel Admin</h3>
@@ -48,16 +47,13 @@ const AdminLayout = () => {
                     </nav>
                </aside>
 
-               {/* Conteúdo */}
                <main className="admin-content">
                     <header className="admin-topbar">
                          <h2>Área Restrita</h2>
 
-                         {/* --- MUDANÇA AQUI: Agrupamos o Badge e o Botão Sair --- */}
                          <div className="topbar-actions">
                               <span className="badge-user">Administrador</span>
 
-                              {/* Novo Botão de Sair (Visível no Mobile) */}
                               <button onClick={handleLogout} className="btn-header-logout" title="Sair do Sistema">
                                    <LogOut size={20} />
                               </button>

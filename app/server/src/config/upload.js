@@ -10,13 +10,12 @@ cloudinary.config({
      api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-// 2. Define o Storage (Onde e como salvar)
+// 2. Define o Storage 
 const storage = new CloudinaryStorage({
      cloudinary: cloudinary,
      params: {
-          folder: 'sentinel_uploads', // Nome da pasta que será criada no seu Cloudinary
-          allowed_formats: ['jpg', 'png', 'jpeg', 'webp'], // Formatos aceitos
-          // public_id: (req, file) => 'arquivo-' + Date.now(), // (Opcional) Nome personalizado
+          folder: 'sentinel_uploads', 
+          allowed_formats: ['jpg', 'png', 'jpeg', 'webp'], 
      },
 });
 

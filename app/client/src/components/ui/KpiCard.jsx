@@ -1,9 +1,8 @@
 import React from 'react';
-import './UiComponents.css'; // Vamos adicionar os estilos aqui
+import './UiComponents.css';
 
 const KpiCard = ({ title, value, icon: Icon, color = 'purple' }) => {
 
-     // Mapeia a cor passada para classes de fundo e cor de texto
      const colorMap = {
           purple: { bg: 'bg-purple-light', text: '#6c63ff' },
           yellow: { bg: 'bg-yellow-light', text: '#d69e2e' },

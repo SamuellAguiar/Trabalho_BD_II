@@ -8,7 +8,6 @@ import { UploadCloud, MapPin, AlertCircle, CheckCircle, ArrowLeft, Search } from
 import api from '../../services/api';
 import './NovaOcorrencia.css';
 
-// --- COMPONENTE DE BUSCA NO MAPA ---
 const SearchField = ({ setPosition }) => {
      const map = useMap();
      useEffect(() => {
@@ -32,7 +31,6 @@ const SearchField = ({ setPosition }) => {
      return null;
 };
 
-// --- MARCADOR DE CLIQUE ---
 function LocationMarker({ position, setPosition }) {
      const map = useMapEvents({
           click(e) {
@@ -48,7 +46,6 @@ const NovaOcorrencia = () => {
      const [loading, setLoading] = useState(false);
      const [error, setError] = useState('');
 
-     // Estados
      const [descricao, setDescricao] = useState('');
      const [dataOcorrencia, setDataOcorrencia] = useState(''); // Estado para Data Manual
      const [setorId, setSetorId] = useState('');
@@ -57,11 +54,9 @@ const NovaOcorrencia = () => {
      const [previewFotos, setPreviewFotos] = useState([]);
      const [position, setPosition] = useState(null);
 
-     // Listas
      const [setores, setSetores] = useState([]);
      const [categorias, setCategorias] = useState([]);
 
-     // Centro inicial (Ex: UFOP)
      const centroInicial = [-20.398, -43.508];
 
      useEffect(() => {
@@ -95,7 +90,6 @@ const NovaOcorrencia = () => {
           const formData = new FormData();
           formData.append('descricao', descricao);
 
-          // Se o usuário preencheu a data opcional, envia
           if (dataOcorrencia) {
                formData.append('data_ocorrencia', dataOcorrencia);
           }
@@ -133,7 +127,6 @@ const NovaOcorrencia = () => {
 
                     <form onSubmit={handleSubmit}>
 
-                         {/* Descrição */}
                          <div className="form-group">
                               <label>Descrição <span className="required">*</span></label>
                               <textarea
@@ -144,7 +137,6 @@ const NovaOcorrencia = () => {
                               ></textarea>
                          </div>
 
-                         {/* NOVO CAMPO DE DATA */}
                          <div className="form-group">
                               <label>Quando aconteceu? (Opcional)</label>
                               <input
@@ -165,7 +157,6 @@ const NovaOcorrencia = () => {
                               </p>
                          </div>
 
-                         {/* Linha Dupla: Categoria e Setor */}
                          <div className="form-row">
                               <div className="form-group">
                                    <label>Categoria <span className="required">*</span></label>
@@ -184,7 +175,6 @@ const NovaOcorrencia = () => {
                               </div>
                          </div>
 
-                         {/* Área de Upload Estilizada */}
                          <div className="form-group">
                               <label>Anexos (Fotos, Documentos)</label>
                               <div className="upload-container">
@@ -206,7 +196,6 @@ const NovaOcorrencia = () => {
                                    </label>
                               </div>
 
-                              {/* Previews */}
                               {previewFotos.length > 0 && (
                                    <div className="preview-row">
                                         {previewFotos.map((src, idx) => (
@@ -218,7 +207,6 @@ const NovaOcorrencia = () => {
                               )}
                          </div>
 
-                         {/* Mapa Geolocalização */}
                          <div className="form-group">
                               <label>Geolocalização <span className="required">*</span></label>
                               <div className="map-frame">
@@ -228,7 +216,6 @@ const NovaOcorrencia = () => {
                                         <LocationMarker position={position} setPosition={setPosition} />
                                    </MapContainer>
 
-                                   {/* Status sobre o mapa */}
                                    <div className={`geo-status ${position ? 'geo-ok' : ''}`}>
                                         {position ? (
                                              <><CheckCircle size={16} /> Localização capturada: {position.lat.toFixed(4)}, {position.lng.toFixed(4)}</>
@@ -239,7 +226,6 @@ const NovaOcorrencia = () => {
                               </div>
                          </div>
 
-                         {/* Botões de Ação */}
                          <div className="form-actions">
                               <button type="submit" className="btn-primary" disabled={loading}>
                                    {loading ? 'Enviando...' : 'Registrar Ocorrência'}

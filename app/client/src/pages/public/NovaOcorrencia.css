@@ -1,7 +1,5 @@
-/* Fundo Geral */
 .nova-ocorrencia-wrapper {
      background-color: #f8f9fa;
-     /* Cinza bem claro de fundo */
      min-height: 100vh;
      padding: 3rem 1rem;
      display: flex;
@@ -9,7 +7,6 @@
      align-items: flex-start;
 }
 
-/* Card Principal */
 .form-card {
      background: white;
      width: 100%;
@@ -17,11 +14,9 @@
      padding: 2.5rem;
      border-radius: 12px;
      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
-     /* Sombra suave */
      border: 1px solid #eaeaea;
 }
 
-/* Cabeçalho */
 .form-header {
      border-bottom: 1px solid #f0f0f0;
      padding-bottom: 1.5rem;
@@ -40,7 +35,6 @@
      font-size: 0.95rem;
 }
 
-/* Grupos de Formulário */
 .form-group {
      margin-bottom: 1.5rem;
 }
@@ -57,7 +51,6 @@
      color: #ef4444;
 }
 
-/* Inputs e Textareas */
 .form-group input[type="text"],
 .form-group select,
 .form-group textarea {
@@ -84,7 +77,6 @@
      min-height: 120px;
 }
 
-/* Linha Lado a Lado (Grid) */
 .form-row {
      display: grid;
      grid-template-columns: 1fr 1fr;
@@ -94,12 +86,10 @@
 @media (max-width: 640px) {
      .form-row {
           grid-template-columns: 1fr;
-          /* Empilha no mobile */
           gap: 0;
      }
 }
 
-/* --- ÁREA DE UPLOAD ESTILO DRAG & DROP --- */
 .upload-container input[type="file"] {
      display: none;
 }
@@ -147,7 +137,6 @@
      font-size: 0.85rem;
 }
 
-/* Previews das Imagens */
 .preview-row {
      display: flex;
      gap: 10px;
@@ -169,7 +158,6 @@
      object-fit: cover;
 }
 
-/* --- MAPA --- */
 .map-frame {
      border: 1px solid #d1d5db;
      border-radius: 12px;
@@ -193,7 +181,6 @@
      color: #059669;
 }
 
-/* --- BOTÕES DE AÇÃO --- */
 .form-actions {
      display: flex;
      gap: 1rem;
@@ -204,9 +191,7 @@
 
 .btn-primary {
      flex: 2;
-     /* Ocupa mais espaço */
      background-color: #6c63ff;
-     /* Roxo */
      color: white;
      border: none;
      padding: 14px;
@@ -228,7 +213,6 @@
 .btn-secondary {
      flex: 1;
      background-color: #e5e7eb;
-     /* Cinza */
      color: #374151;
      border: none;
      padding: 14px;
@@ -243,7 +227,6 @@
      background-color: #d1d5db;
 }
 
-/* Erro */
 .error-banner {
      background-color: #fef2f2;
      color: #b91c1c;

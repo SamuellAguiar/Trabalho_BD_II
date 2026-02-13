@@ -3,7 +3,6 @@ const dbInstance = require('../config/database');
 
 class CategoriaController {
 
-     // Helper para instanciar o service
      _getService() {
           const db = dbInstance.getDb();
           return new CategoriaService(db);
@@ -47,7 +46,6 @@ class CategoriaController {
                await service.deletar(id);
                return res.status(200).json({ mensagem: "Categoria excluída com sucesso." });
           } catch (error) {
-               // Retorna 409 (Conflict) se tentar apagar categoria em uso
                if (error.message.includes('vinculadas')) {
                     return res.status(409).json({ erro: error.message });
                }

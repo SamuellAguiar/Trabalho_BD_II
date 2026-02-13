@@ -18,7 +18,6 @@ class SetorRepository {
      }
 
      async findByName(nome) {
-          // Busca insensível a maiúsculas/minúsculas
           return await this.collection.findOne({ nome: { $regex: new RegExp(`^${nome}$`, 'i') } });
      }
 

@@ -16,19 +16,15 @@ import GerenciarGenerico from '../pages/admin/GerenciarGenerico';
 import GerenciarOcorrencias from '../pages/admin/GerenciarOcorrencias';
 import DetalhesOcorrencia from '../pages/public/DetalhesOcorrencia';
 
-// --- COMPONENTE DE ROTA PROTEGIDA ---
 const PrivateRoute = ({ children }) => {
-     // Verifica se existe o token simulado
      const isAuthenticated = localStorage.getItem('admin_token') === 'true';
 
-     // Se sim, mostra o conteúdo (AdminLayout). Se não, joga pro Login.
      return isAuthenticated ? children : <Navigate to="/login-admin" replace />;
 };
 
 const AppRoutes = () => {
      return (
           <Routes>
-               {/* FLUXO PÚBLICO */}
                <Route path="/" element={<PublicLayout />}>
                     <Route index element={<Home />} />
                     <Route path="nova" element={<NovaOcorrencia />} />
@@ -36,10 +32,8 @@ const AppRoutes = () => {
                     <Route path="ocorrencias/:id" element={<DetalhesOcorrencia />} />
                </Route>
 
-               {/* ROTA DE LOGIN (Fora dos Layouts) */}
                <Route path="/login-admin" element={<LoginAdmin />} />
 
-               {/* FLUXO ADMIN (PROTEGIDO) */}
                <Route path="/admin" element={
                     <PrivateRoute>
                          <AdminLayout />

@@ -6,14 +6,13 @@ class OcorrenciaRepository {
      }
 
      async create(dadosOcorrencia) {
-          // Insere usando o driver nativo
           return await this.collection.insertOne(dadosOcorrencia);
      }
 
      async findFiltered(filtros) {
           const query = {};
 
-          // Filtro por status (exato)
+          // Filtro por status 
           if (filtros.status) {
                query.status = filtros.status;
           }
@@ -28,21 +27,20 @@ class OcorrenciaRepository {
                query.Setor_REF = new ObjectId(filtros.setorId);
           }
 
-          // Filtro por palavra-chave na descrição (Regex - busca parcial)
+          // Filtro por palavra-chave na descrição 
           if (filtros.busca) {
                query.descricao = { $regex: filtros.busca, $options: 'i' };
           }
 
-          // AGGREGATION PIPELINE (O "Join" do NoSQL)
-          // Isso é essencial para mostrar o NOME do setor e não só o ID na tela
+          // AGGREGATION PIPELINE 
           const pipeline = [
-               { $match: query }, // Aplica os filtros acima
+               { $match: query }, 
                {
                     $lookup: {
-                         from: 'setores',          // Coleção alvo
-                         localField: 'Setor_REF',  // Campo na ocorrência
-                         foreignField: '_id',      // Campo no setor
-                         as: 'detalhes_setor'      // Onde vai guardar o resultado
+                         from: 'setores',          
+                         localField: 'Setor_REF',  
+                         foreignField: '_id',      
+                         as: 'detalhes_setor'      
                     }
                },
                {
@@ -53,8 +51,6 @@ class OcorrenciaRepository {
                          as: 'detalhes_categoria'
                     }
                },
-               // O lookup retorna um array, vamos pegar o primeiro item (unwind)
-               // ou projetar apenas os nomes para facilitar o front-end
                {
                     $project: {
                          descricao: 1,
@@ -82,7 +78,6 @@ class OcorrenciaRepository {
      }
      
      async findById(id) {
-          // Precisamos do lookup aqui também para trazer os nomes de setor/categoria
           const pipeline = [
                { $match: { _id: new ObjectId(id) } },
                {
@@ -100,11 +95,10 @@ class OcorrenciaRepository {
                }
           ];
           const result = await this.collection.aggregate(pipeline).toArray();
-          return result[0]; // Retorna o primeiro (e único) item
+          return result[0]; 
      }
 
      async removeAnexo(idOcorrencia, caminhoArquivo) {
-          // $pull remove um item de um array que corresponda à condição
           return await this.collection.updateOne(
                { _id: new ObjectId(idOcorrencia) },
                { $pull: { anexos: { caminho_arquivo: caminhoArquivo } } }

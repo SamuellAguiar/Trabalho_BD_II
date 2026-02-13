@@ -3,7 +3,7 @@ const createPoint = (lat, lng) => {
      return {
           type: "Point",
           coordinates: [
-               parseFloat(lng), // Mongo usa Longitude, Latitude
+               parseFloat(lng), //Longitude, Latitude
                parseFloat(lat)
           ]
      };

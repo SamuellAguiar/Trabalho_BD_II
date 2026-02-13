@@ -4,7 +4,7 @@ const { ObjectId } = require('mongodb');
 class CategoriaService {
      constructor(db) {
           this.categoriaRepository = new CategoriaRepository(db);
-          this.ocorrenciaCollection = db.collection('ocorrencias'); // Para checar vínculos
+          this.ocorrenciaCollection = db.collection('ocorrencias');
      }
 
      async criar(dados) {
@@ -35,7 +35,6 @@ class CategoriaService {
      async deletar(id) {
           if (!ObjectId.isValid(id)) throw new Error("ID inválido.");
 
-          // REGRA DE INTEGRIDADE: Verifica se existe ocorrência usando esta categoria
           const ocorrenciasVinculadas = await this.ocorrenciaCollection.countDocuments({
                Categoria_REF: new ObjectId(id)
           });

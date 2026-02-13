@@ -9,8 +9,7 @@ const HeatmapLayer = ({ points }) => {
      useEffect(() => {
           if (!points || points.length === 0) return;
 
-          // Formato que o plugin espera: [lat, lng, intensidade]
-          const heatData = points.map(p => [p.lat, p.lng, 0.8]); // 0.8 é a intensidade padrão
+          const heatData = points.map(p => [p.lat, p.lng, 0.8]); 
 
           const heat = L.heatLayer(heatData, {
                radius: 25,

@@ -2,7 +2,6 @@ import React from 'react';
 import { Upload } from 'lucide-react';
 import './FormComponents.css';
 
-// Componente de Label + Input/Select/Textarea
 export const FormGroup = ({ label, required, children, error }) => (
      <div className="form-group">
           <label className="form-label">
@@ -13,12 +12,10 @@ export const FormGroup = ({ label, required, children, error }) => (
      </div>
 );
 
-// Componente Textarea Estilizado
 export const TextArea = ({ placeholder, ...props }) => (
      <textarea className="form-input textarea" placeholder={placeholder} {...props} />
 );
 
-// Componente Select Estilizado
 export const Select = ({ options, placeholder, value, onChange, ...props }) => (
      <select className="form-input select" value={value} onChange={onChange} {...props}>
           <option value="" disabled>{placeholder}</option>
@@ -44,7 +41,6 @@ export const Input = ({ icon: Icon, placeholder, value, onChange, ...props }) =>
      </div>
 );
 
-// Componente Visual de Upload (Drag & Drop style)
 export const FileUploadArea = ({ onFileSelect, filesCount }) => {
      return (
           <div className="upload-area">

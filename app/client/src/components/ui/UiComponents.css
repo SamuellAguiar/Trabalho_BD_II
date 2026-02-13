@@ -1,6 +1,3 @@
-/* src/components/ui/UiComponents.css */
-
-/* --- BOTÕES --- */
 .btn-purple {
      display: inline-block;
      padding: 12px 24px;
@@ -38,7 +35,6 @@
      transform: translateY(-2px);
 }
 
-/* --- FEATURE CARD (Branco) --- */
 .feature-card-white {
      background: white;
      padding: 2rem;
@@ -78,7 +74,6 @@
      line-height: 1.5;
 }
 
-/* --- STAT CARD (Colorido) --- */
 .stat-card {
      padding: 2rem;
      border-radius: 16px;
@@ -120,9 +115,6 @@
      font-weight: 500;
 }
 
-/* ... (Mantenha os estilos anteriores de Button, FeatureCard etc) ... */
-
-/* --- KPI CARD (Admin) --- */
 .kpi-card {
      background: white;
      padding: 1.5rem;
@@ -158,7 +150,6 @@
      justify-content: center;
 }
 
-/* Cores de Fundo Suaves */
 .bg-purple-light {
      background-color: #f3f0ff;
 }
@@ -176,7 +167,6 @@
      background-color: #f0fff4;
 }
 
-/* --- REPORT BUTTON (Admin) --- */
 .report-btn {
      background: white;
      border: 1px solid #e2e8f0;
@@ -190,7 +180,6 @@
      cursor: pointer;
      transition: all 0.2s;
      width: 100%;
-     /* Ocupa a grid */
 }
 
 .report-btn:hover {
