@@ -25,5 +25,3 @@ dist-ssr
 
 # Optional npm cache directory
 .npm
-
-.env
