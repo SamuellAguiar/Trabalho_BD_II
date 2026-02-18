@@ -140,10 +140,6 @@ cd app/server
 
 npm install
 
-# Configure as variáveis de ambiente
-
-# Crie um arquivo .env com as configurações do MongoDB
-
 node server.js
 ```
 
