@@ -17,6 +17,12 @@ import logoImg from '/favicon.png';
 
 import api from '../../services/api';
 import './Dashboard.css';
+import {
+     formatDateFromItem,
+     formatDateTimeFromItem,
+     getDateKeyFromItem,
+     getDateTimestampFromItem
+} from '../../utils/dateUtils';
 
 import KpiCard from '../../components/ui/KpiCard';
 import ReportButton from '../../components/ui/ReportButton';
@@ -92,17 +98,22 @@ const Dashboard = () => {
           // 4. Evolução Temporal (Linha)
           const timeMap = {};
           lista.forEach(oc => {
-               const dataFormatada = new Date(oc.data_hora).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
-               timeMap[dataFormatada] = (timeMap[dataFormatada] || 0) + 1;
+               const chaveData = getDateKeyFromItem(oc);
+               if (!chaveData) return;
+
+               if (!timeMap[chaveData]) {
+                    timeMap[chaveData] = {
+                         data: formatDateFromItem(oc, { day: '2-digit', month: '2-digit' }, 'Sem data'),
+                         quantidade: 0
+                    };
+               }
+
+               timeMap[chaveData].quantidade += 1;
           });
 
           const linhaData = Object.keys(timeMap)
-               .sort((a, b) => {
-                    const [dA, mA] = a.split('/');
-                    const [dB, mB] = b.split('/');
-                    return new Date(2025, mA - 1, dA) - new Date(2025, mB - 1, dB);
-               })
-               .map(key => ({ data: key, quantidade: timeMap[key] }));
+               .sort((a, b) => new Date(a) - new Date(b))
+               .map(key => timeMap[key]);
 
           setGraficoLinha(linhaData);
 
@@ -154,22 +165,28 @@ const Dashboard = () => {
                          colunas = [['Zona / Setor', 'Qtd. Ocorrências', 'Último Registro']];
                          const countSetor = {};
                          const lastDateSetor = {};
+                         const lastTsSetor = {};
                          dadosFiltrados.forEach(d => {
                               const setor = d.nome_setor || 'N/A';
                               countSetor[setor] = (countSetor[setor] || 0) + 1;
-                              lastDateSetor[setor] = new Date(d.data_hora).toLocaleDateString();
+
+                              const ts = getDateTimestampFromItem(d, -1);
+                              if (ts > (lastTsSetor[setor] ?? -1)) {
+                                   lastTsSetor[setor] = ts;
+                                   lastDateSetor[setor] = formatDateFromItem(d, undefined, 'N/D');
+                              }
                          });
                          dadosFormatados = Object.keys(countSetor).map(key => [
-                              key, countSetor[key], lastDateSetor[key]
+                              key, countSetor[key], lastDateSetor[key] || 'N/D'
                          ]).sort((a, b) => b[1] - a[1]); 
                          break;
 
                     case 'Cronológico':
                          colunas = [['Data/Hora', 'Descrição', 'Setor', 'Status']];
                          dadosFormatados = dadosFiltrados
-                              .sort((a, b) => new Date(b.data_hora) - new Date(a.data_hora)) 
+                              .sort((a, b) => getDateTimestampFromItem(b, -1) - getDateTimestampFromItem(a, -1)) 
                               .map(item => [
-                                   new Date(item.data_hora).toLocaleString('pt-BR'),
+                                   formatDateTimeFromItem(item),
                                    item.descricao.substring(0, 40) + '...',
                                    item.nome_setor || 'N/A',
                                    item.status
@@ -180,11 +197,11 @@ const Dashboard = () => {
                          colunas = [['Descrição', 'Setor', 'Aberto em']];
                          dadosFormatados = dadosFiltrados
                               .filter(i => i.status !== 'RESOLVIDO') 
-                              .sort((a, b) => new Date(a.data_hora) - new Date(b.data_hora)) 
+                              .sort((a, b) => getDateTimestampFromItem(a, Number.MAX_SAFE_INTEGER) - getDateTimestampFromItem(b, Number.MAX_SAFE_INTEGER)) 
                               .map(item => [
                                    item.descricao.substring(0, 40) + '...',
                                    item.nome_setor || 'N/A',
-                                   new Date(item.data_hora).toLocaleDateString()
+                                   formatDateFromItem(item, undefined, 'N/D')
                               ]);
                          break;
 
@@ -196,7 +213,7 @@ const Dashboard = () => {
                                    item.nome_categoria || 'Geral',
                                    item.descricao.substring(0, 40) + '...',
                                    item.status,
-                                   new Date(item.data_hora).toLocaleDateString()
+                                   formatDateFromItem(item, undefined, 'N/D')
                               ]);
                          break;
 
@@ -337,7 +354,7 @@ const Dashboard = () => {
 
                          <ReportButton
                               icon={Calendar}
-                              label="Histórico Cronológico"
+                              label=" Relatório Cronológico"
                               onClick={() => gerarRelatorioPDF('Cronológico')}
                          />
 
@@ -349,7 +366,7 @@ const Dashboard = () => {
 
                          <ReportButton
                               icon={Folder}
-                              label="Análise por Categoria"
+                              label="Relatório de Categoria"
                               onClick={() => gerarRelatorioPDF('Categorias')}
                          />
 

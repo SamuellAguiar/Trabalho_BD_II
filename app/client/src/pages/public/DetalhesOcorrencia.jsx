@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { MapPin, Calendar, Tag, ArrowLeft, Image as ImageIcon } from 'lucide-react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import api, { getImageUrl } from '../../services/api';
+import { formatDateTimeFromItem } from '../../utils/dateUtils';
 import Badge from '../../components/ui/Badge';
 import Button from '../../components/ui/Button';
 import './DetalhesOcorrencia.css';
@@ -27,12 +28,9 @@ const DetalhesOcorrencia = () => {
      const lat = ocorrencia.localizacao_geo?.coordinates[1];
      const lng = ocorrencia.localizacao_geo?.coordinates[0];
 
-     const dataExibicao = ocorrencia.data_ocorrencia || ocorrencia.data_criacao || ocorrencia.data_hora;
      const labelData = ocorrencia.data_ocorrencia ? "Data do Ocorrido" : "Data do Registro";
 
-     const dataFormatada = dataExibicao
-          ? new Date(dataExibicao).toLocaleString('pt-BR')
-          : 'N/D';
+     const dataFormatada = formatDateTimeFromItem(ocorrencia, undefined, 'N/D');
 
      return (
           <div className="detalhes-container centered-content">

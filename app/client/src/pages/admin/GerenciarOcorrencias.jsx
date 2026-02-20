@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Trash2, Save, X, Plus, ImageOff } from 'lucide-react'; 
 import { useNavigate } from 'react-router-dom';
 import api, { getImageUrl } from '../../services/api';
+import { formatDateFromItem } from '../../utils/dateUtils';
 import './GerenciarGenerico.css';
 import Badge from '../../components/ui/Badge';
 import Button from '../../components/ui/Button';
@@ -14,6 +15,10 @@ const GerenciarOcorrencias = () => {
 
      const [editandoId, setEditandoId] = useState(null);
      const [novoStatus, setNovoStatus] = useState('');
+
+     const formatarData = (item) => {
+          return formatDateFromItem(item, undefined, 'Sem data');
+     };
 
      const confirmToast = (mensagem) => new Promise((resolve) => {
           const toastId = toast.info(({ closeToast }) => (
@@ -128,7 +133,7 @@ const GerenciarOcorrencias = () => {
                                    <div className="item-meta">
                                         <span className="meta-tag">{item.nome_setor}</span>
                                         <span className="meta-tag">{item.nome_categoria}</span>
-                                        <span className="meta-date">{new Date(item.data_hora).toLocaleDateString()}</span>
+                                        <span className="meta-date">{formatarData(item)}</span>
                                    </div>
 
                                    {item.anexos && item.anexos.length > 0 && (

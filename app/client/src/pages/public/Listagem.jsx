@@ -5,6 +5,7 @@ import {
      ChevronDown, Image as ImageIcon
 } from 'lucide-react';
 import api, { getImageUrl } from '../../services/api';
+import { formatDateTimeFromItem } from '../../utils/dateUtils';
 import './Listagem.css';
 
 const Listagem = () => {
@@ -79,14 +80,10 @@ const Listagem = () => {
      };
 
      const formatarData = (item) => {
-          const dataParaExibir = item.data_ocorrencia || item.data_criacao || item.data_hora;
-
-          if (!dataParaExibir) return 'Data N/D';
-
-          return new Date(dataParaExibir).toLocaleString('pt-BR', {
+          return formatDateTimeFromItem(item, {
                day: '2-digit', month: '2-digit', year: 'numeric',
                hour: '2-digit', minute: '2-digit'
-          });
+          }, 'Data N/D');
      };
 
      const renderLocalizacao = (geo) => {
