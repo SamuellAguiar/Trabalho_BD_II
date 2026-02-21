@@ -128,7 +128,7 @@ Antes de começar, você precisará ter instalado:
 ### Clonando o Repositório
 
 ```bash
-git clone [https://github.com/SamuellAguiar/Trabalho_BD_II.git](https://github.com/SamuellAguiar/Trabalho_BD_II.git)
+git clone https://github.com/SamuellAguiar/Trabalho_BD_II.git
 
 cd Trabalho_BD_II
 ```
