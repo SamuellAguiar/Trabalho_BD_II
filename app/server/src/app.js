@@ -20,6 +20,18 @@ app.use((req, res, next) => {
      next();
 });
 
+app.get('/sentinel_uploads/:publicId', (req, res) => {
+     const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
+
+     if (!cloudName) {
+          return res.status(500).send('CLOUDINARY_CLOUD_NAME não configurado.');
+     }
+
+     const { publicId } = req.params;
+     const cloudinaryUrl = `https://res.cloudinary.com/${cloudName}/image/upload/sentinel_uploads/${encodeURIComponent(publicId)}`;
+     return res.redirect(cloudinaryUrl);
+});
+
 // 4. Rotas da API
 app.use('/api', appRoutes);
 

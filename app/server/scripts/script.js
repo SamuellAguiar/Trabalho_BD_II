@@ -93,7 +93,7 @@ async function script() {
                     localizacao_geo: { type: "Point", coordinates: [-43.5090, -20.3990] },
                     anexos: [
                          {
-                              caminho_arquivo: "/Exemplo.png",
+                              caminho_arquivo: "sentinel_uploads/kixa2syidr7xnqh96uy7",
                               tipo_arquivo: "image/png"
                          }
                     ]
@@ -118,7 +118,7 @@ async function script() {
                     localizacao_geo: { type: "Point", coordinates: [-43.5080, -20.3985] },
                     anexos: [
                          {
-                              caminho_arquivo: "/Exemplo01.png",
+                              caminho_arquivo: "sentinel_uploads/kixa2syidr7xnqh96uy7",
                               tipo_arquivo: "image/png"
                          }
                     ]
