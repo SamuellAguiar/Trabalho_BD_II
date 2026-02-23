@@ -1,7 +1,7 @@
 # Sentinel - Sistema de Registro Anônimo de Ocorrências
 
 <p align="center">
-    <img src="https://img.shields.io/static/v1?label=STATUS&message=EM%20DESENVOLVIMENTO&color=RED&style=for-the-badge" alt="Status: Em Desenvolvimento"/>
+    <img src="https://img.shields.io/static/v1?label=STATUS&message=EM PRODUÇÃO&color=RED&style=for-the-badge" alt="Status: Em Desenvolvimento"/>
 </p>
 
 <p align="center">
