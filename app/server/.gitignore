@@ -24,3 +24,5 @@ pids
 .idea/
 *.swp
 *.swo
+
+*.env
